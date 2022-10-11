@@ -29,9 +29,12 @@ public class Board
 
 	public void Print()
 	{
-		var width = _holesPerPlayer + 4; // room for base-holes and margin
+		// Calculate widths to base printing on
+		var holeDisplayWidth = _holes.Max().ToString().Length + 2;
+		var width = _holesPerPlayer * holeDisplayWidth + 4; // room for base-holes and margin
 		StringBuilder sb = new();
-		
+
+		// Print
 		printFilledLine();
 		printHolesLine(GetHolesP1);
 		printBaseHoleLine(GetBaseP1, GetBaseP2);
@@ -40,28 +43,28 @@ public class Board
 
 		void printFilledLine()
 		{
-			for (var i = 0; i < width; i++)
-				sb.Append('#');
+			sb.Append('#', width);
 			sb.AppendLine();
 		}
 		
-		void printHolesLine(byte[] holeContents)
+		void printHolesLine(IEnumerable<byte> holeContents)
 		{
 			sb.Append("##");
 			foreach (var hole in holeContents)
-				sb.Append(hole);
+				sb.Append(padHole(hole));
 			sb.AppendLine("##");
 		}
 
 		void printBaseHoleLine(byte holeL, byte holeR)
 		{
 			sb.Append('#');
-			sb.Append(holeL);
-			for (var i = 2; i < width - 2; i++)
-				sb.Append('#');
-			sb.Append(holeR);
+			sb.Append(padHole(holeL));
+			sb.Append('#', width - 2 - 2 * holeDisplayWidth); // width - edges - holesDisplayed
+			sb.Append(padHole(holeR));
 			sb.AppendLine("#");
 		}
+
+		string padHole(byte hole) => hole.ToString().PadLeft(holeDisplayWidth - 1, ' ') + ' ';
 
 		Console.WriteLine(sb.ToString());
 	}
