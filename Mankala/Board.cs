@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace Mankala;
 
@@ -6,6 +7,7 @@ public class Board
 {
 	private readonly byte _stonesPerHole;
 	private readonly byte _holesPerPlayer;
+	[DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
 	private byte[] _holes; // n holes for p1, 1 base hole for p1, n holes for p2, 1 base hole for p2
 
 	public byte   GetBaseP1  => _holes[_holesPerPlayer];
@@ -15,7 +17,7 @@ public class Board
 	
 	public Board(byte stonesPerHole, byte holesPerPlayer)
 	{
-		_stonesPerHole       = stonesPerHole;
+		_stonesPerHole = stonesPerHole;
 		_holesPerPlayer = holesPerPlayer;
 		InitializeBoard();
 	}
@@ -68,4 +70,6 @@ public class Board
 
 		Console.WriteLine(sb.ToString());
 	}
+
+	public IBoardState GetBoardState() => new MankalaBoardState(GetBaseP1, GetBaseP2, GetHolesP1, GetHolesP2);
 }
