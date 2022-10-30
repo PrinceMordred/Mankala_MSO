@@ -40,6 +40,10 @@ void selectHole(ref int currentHoleIndex, Range holeIndexes)
 	ConsoleKey inputKey;
 	while ((inputKey = Console.ReadKey().Key) != ConsoleKey.Enter) // Keep moving the selection arrow until player presses enter
 	{
+		// Reset cursor position after input
+		var (x, y) = Console.GetCursorPosition();
+		Console.SetCursorPosition(x -1, y);
+		
 		switch (inputKey)
 		{
 			case ConsoleKey.RightArrow: currentHoleIndex += playerOneIsOn ? 1 : -1; // the ternary compensates for the fact that the upper holes go from right to left
@@ -52,9 +56,6 @@ void selectHole(ref int currentHoleIndex, Range holeIndexes)
 		// Clamp selected hole to player's holes
 		currentHoleIndex = Math.Clamp(currentHoleIndex, holeIndexes.Start.Value, holeIndexes.End.Value - 1);
 		
-		// Reset cursor position after input
-		var (x, y) = Console.GetCursorPosition();
-		Console.SetCursorPosition(x -1, y);
 
 		// Move the arrow to the new selected hole
 		moveSelectionArrow(currentHoleIndex);
