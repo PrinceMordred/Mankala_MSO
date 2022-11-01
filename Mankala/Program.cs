@@ -20,7 +20,7 @@ while (true)
 	
 	// Ask the player to make a move
 	Console.Clear();
-	selectHole(ref currentHoleIndex, rangeOfHolesOfCurrentPlayer);
+	promptSelectHole(ref currentHoleIndex, rangeOfHolesOfCurrentPlayer);
 	Console.Beep();
 	
 	// Make instructed move
@@ -29,7 +29,7 @@ while (true)
 }
 
 // Converts selectedHoleOfCurrentPlayer to the new selected hole index
-void selectHole(ref int currentHoleIndex, Range holeIndexes)
+void promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
 {
 	// Print the board and the selection arrow to the console.
 	var (holesOffset, holeWidth, arrowY) = printBoardAndSelectionArrow(!playerOneIsOn);
@@ -40,9 +40,15 @@ void selectHole(ref int currentHoleIndex, Range holeIndexes)
 	ConsoleKey inputKey;
 	while ((inputKey = Console.ReadKey().Key) != ConsoleKey.Enter) // Keep moving the selection arrow until player presses enter
 	{
-		// Reset cursor position after input
-		var (x, y) = Console.GetCursorPosition();
-		Console.SetCursorPosition(x -1, y);
+		try // Sadly, not every computer likes this code
+		{
+			// Reset cursor position after input
+			var (x, y) = Console.GetCursorPosition();
+			Console.SetCursorPosition(x -1, y);
+		}
+		catch (Exception e)
+		{
+		}
 		
 		switch (inputKey)
 		{
@@ -91,10 +97,13 @@ void selectHole(ref int currentHoleIndex, Range holeIndexes)
 	stringBuilder.Append(boardAscii);
 	
 	// create potential arrow under the board
-	stringBuilder.Append(!selectUpperHole ? "^\n|\n" : "\n\n");
+	stringBuilder.AppendLine(!selectUpperHole ? "^\n|\n" : "\n\n");
+	
+	// Explain what the hell is going on
+	stringBuilder.Append("Use your arrow keys to\nmove the arrow, and press\nenter enter to make a move\n\n> ");
 	
 	// print to console
-	Console.WriteLine(stringBuilder);
+	Console.Write(stringBuilder);
 
 	var arrowY = selectUpperHole ? 0 : 2 + 5; // padding + board height
 	return (holesOffset, holeWidth, arrowY);
