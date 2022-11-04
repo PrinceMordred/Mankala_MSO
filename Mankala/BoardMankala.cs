@@ -3,24 +3,24 @@ using System.Text;
 
 namespace Mankala;
 
-public class Board
+public abstract class Board
 {
-	private readonly byte _stonesPerHole;
-	private readonly byte _holesPerPlayer;
+	protected readonly byte _stonesPerHole;
+	protected readonly byte _holesPerPlayer;
 	
-	private byte[] _holes; // n holes for p1, 1 base hole for p1, n holes for p2, 1 base hole for p2
+	protected byte[] _holes; // n holes for p1, 1 base hole for p1, n holes for p2, 1 base hole for p2
 
-	public int IndexOfBaseHoleP1 => _holesPerPlayer;
-	public int IndexOfBaseHoleP2 => _holes.Length - 1;
-	public Range RangeOfHolesP1 => new(0, IndexOfBaseHoleP1);
-	public Range RangeOfHolesP2 => new(IndexOfBaseHoleP1 + 1, IndexOfBaseHoleP2);
+	public virtual int IndexOfBaseHoleP1 => _holesPerPlayer;
+	public virtual int IndexOfBaseHoleP2 => _holes.Length - 1;
+	public virtual Range RangeOfHolesP1 => new(0, IndexOfBaseHoleP1);
+	public virtual Range RangeOfHolesP2 => new(IndexOfBaseHoleP1 + 1, IndexOfBaseHoleP2);
 	
-	public byte   GetBaseP1  => _holes[IndexOfBaseHoleP1];
-	public byte   GetBaseP2  => _holes[IndexOfBaseHoleP2];
-	public byte[] GetHolesP1 => _holes[RangeOfHolesP1];
-	public byte[] GetHolesP2 => _holes[RangeOfHolesP2];
+	public virtual byte   GetBaseP1  => _holes[IndexOfBaseHoleP1];
+	public virtual byte   GetBaseP2  => _holes[IndexOfBaseHoleP2];
+	public virtual byte[] GetHolesP1 => _holes[RangeOfHolesP1];
+	public virtual byte[] GetHolesP2 => _holes[RangeOfHolesP2];
 
-	private bool _IsBaseHoleOf(int player, int i) => player switch
+	protected virtual bool _IsBaseHoleOf(int player, int i) => player switch
 	{
 		1 => i == _holesPerPlayer,
 		2 => i == _holes.Length - 1,
@@ -52,7 +52,7 @@ public class Board
 		}
 	}
 
-	private void InitializeBoard()
+	protected virtual void InitializeBoard()
 	{
 		_holes = new byte[2 + _holesPerPlayer * 2]; // 2 base-holes and every player hole
 		Array.Fill(_holes, _stonesPerHole, 0,                   _holesPerPlayer);
@@ -60,7 +60,7 @@ public class Board
 	}
 
 	/// <returns>A tuple containing: board ASCII art, width of the art, width of a single hole, offset of the first player hole</returns>
-	public (string, int, int, int) PrintBoard()
+	public virtual (string, int, int, int) PrintBoard()
 	{
 		// Calculate widths to base printing on
 		var holeDisplayWidth = _holes.Max().ToString().Length + 2;
@@ -102,13 +102,22 @@ public class Board
 		return (sb.ToString(), width, holeDisplayWidth, 2);
 	}
 
-	public IBoardState GetBoardState() =>
-		new MankalaBoardState(GetBaseP1, GetBaseP2, GetHolesP1, GetHolesP2);
-
 	/// <param name="holeIndex">the hole from which the move is performed, AKA the hole which stones are spread</param>
 	/// <param name="otherPlayerIndex">The index of the OTHER player</param>
-	/// <returns>The new state after performing the move</returns>
-	public IBoardState MakeMove(int holeIndex, int otherPlayerIndex)
+	public abstract void MakeMove(int holeIndex, int otherPlayerIndex);
+}
+
+public class BoardMankala : Board
+{
+	public BoardMankala(byte stonesPerHole, byte holesPerPlayer) : base(stonesPerHole, holesPerPlayer)
+	{
+	}
+
+	public BoardMankala()
+	{
+	}
+
+	public override void MakeMove(int holeIndex, int otherPlayerIndex)
 	{
 		// pick up all stones
 		var stonesToSpread = _holes[holeIndex];
@@ -123,10 +132,7 @@ public class Board
 				continue; // Don't move over opponents base hole TODO: make this dependent on IRuleSet
 			
 			_holes[currentHole] += 1;
-			stonesToSpread  -= 1;
+			stonesToSpread      -= 1;
 		}
-		
-		// return new state
-		return GetBoardState();
 	}
 }

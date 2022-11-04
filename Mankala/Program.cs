@@ -4,7 +4,7 @@ using Mankala;
 const byte startingStonesPerHole = 4;
 const byte holesPerPlayer = 3;
 
-Board board = new(startingStonesPerHole, holesPerPlayer);
+var board = new BoardMankala(startingStonesPerHole, holesPerPlayer);
 
 // remember the state of who (and how) selects the next hole to make a move
 var playerOneIsOn = true;
