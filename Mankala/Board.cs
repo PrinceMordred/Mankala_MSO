@@ -8,7 +8,8 @@ public abstract class Board
 	protected readonly byte _holesPerPlayer;
 	
 	protected byte[] _holes; // n holes for p1, 1 base hole for p1, n holes for p2, 1 base hole for p2
-
+	public byte[] GetHoles => _holes;
+	
 	public virtual int IndexOfBaseHoleP1 => _holesPerPlayer;
 	public virtual int IndexOfBaseHoleP2 => _holes.Length - 1;
 	public virtual Range RangeOfHolesP1 => new(0, IndexOfBaseHoleP1);
@@ -50,6 +51,8 @@ public abstract class Board
 			return prompt(question);
 		}
 	}
+	
+	
 
 	protected virtual void InitializeBoard()
 	{
