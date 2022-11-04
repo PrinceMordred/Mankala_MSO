@@ -6,6 +6,7 @@ public abstract class Board
 {
 	protected readonly byte _stonesPerHole;
 	protected readonly byte _holesPerPlayer;
+	public IRuleset ruleset;
 	
 	protected byte[] _holes; // n holes for p1, 1 base hole for p1, n holes for p2, 1 base hole for p2
 	public byte[] GetHoles => _holes;
@@ -28,31 +29,31 @@ public abstract class Board
 			"A player was referenced with an incorrect index, which should be 1 or 2: " + player.ToString())
 	};
 
-	public Board(byte stonesPerHole, byte holesPerPlayer)
+	public Board(byte stonesPerHole, byte holesPerPlayer, IRuleset ruleset)
 	{
 		_stonesPerHole = stonesPerHole;
 		_holesPerPlayer = holesPerPlayer;
+		this.ruleset = ruleset;
 		InitializeBoard();
 	}
-	public Board()
+	public Board(IRuleset ruleset)
 	{
 		_stonesPerHole = prompt("How many stones should every hole have?");
 		_holesPerPlayer = prompt("How many holes should evey player have?");
+		this.ruleset = ruleset;
 		InitializeBoard();
-		
+
 		byte prompt(string question)
 		{
 			Console.Write(question + " > ");
 			if (byte.TryParse(Console.ReadLine(), out byte input))
 				return input;
-			
+
 			// If we reach this code, the input was invalid
 			Console.WriteLine("Please enter some valid input. > ");
 			return prompt(question);
 		}
 	}
-	
-	
 
 	protected virtual void InitializeBoard()
 	{
