@@ -34,6 +34,23 @@ public class Board
 		_holesPerPlayer = holesPerPlayer;
 		InitializeBoard();
 	}
+	public Board()
+	{
+		_stonesPerHole = prompt("How many stones should every hole have?");
+		_holesPerPlayer = prompt("How many holes should evey player have?");
+		InitializeBoard();
+		
+		byte prompt(string question)
+		{
+			Console.Write(question + " > ");
+			if (byte.TryParse(Console.ReadLine(), out byte input))
+				return input;
+			
+			// If we reach this code, the input was invalid
+			Console.WriteLine("Please enter some valid input. > ");
+			return prompt(question);
+		}
+	}
 
 	private void InitializeBoard()
 	{
