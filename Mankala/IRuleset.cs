@@ -15,6 +15,6 @@ namespace Mankala
         // methods for a ruleset
         public bool CheckValidMove(Board state, int clickedHole);
         public bool CheckWin      (Board state);
-        public int NextPlayer     (Board state);
+        //public int NextPlayer     (Board state);
     }
 }

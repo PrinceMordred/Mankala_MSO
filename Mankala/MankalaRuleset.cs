@@ -12,20 +12,22 @@ namespace Mankala
         public int numStartStones()    => 4;
         public bool CheckValidMove(Board board, int clickedHole)
         {
-            return board.HolesP1()[clickedHole] == null;
+            return board.GetHoles[clickedHole] != 0;
         }
 
         public bool CheckWin(Board state)
         {
-            IEnumerable<byte> s = state.HolesP1();
+            IEnumerable<byte> s = state.GetHolesP1;
             foreach (byte b in s)
                 if (b != 0)
                     return false;
             return true;
         }
-        public Player NextPlayer(Player p, IBoardState state)
+        /*
+        public Player NextPlayer(Player p, Board state)
         {
             return p;
         }
+        */
     }
 }
