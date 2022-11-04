@@ -13,8 +13,8 @@ namespace Mankala
         public int numStartStones();
 
         // methods for a ruleset
-        public bool CheckValidMove(IBoardState state, int clickedHole);
-        public bool CheckWin      (IBoardState state);
-        public int NextPlayer     (IBoardState state);
+        public bool CheckValidMove(Board state, int clickedHole);
+        public bool CheckWin      (Board state);
+        public int NextPlayer     (Board state);
     }
 }
