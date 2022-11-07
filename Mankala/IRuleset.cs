@@ -6,6 +6,20 @@ using System.Threading.Tasks;
 
 namespace Mankala
 {
+    public enum Ruleset
+    {
+        Mankala
+    }
+    
+    public static class RulesetFactory // follows the Simple Factory Pattern
+    {
+        public static IRuleset CreateRuleSet(Ruleset ruleset) => ruleset switch
+        {
+            Ruleset.Mankala => new MankalaRuleset(),
+            _                => throw new Exception("Cannot create non-existing IRuleSet")
+        };
+    }
+    
     public interface IRuleset
     {
         // variables for a Ruleset

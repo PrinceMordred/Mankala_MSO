@@ -1,6 +1,6 @@
 namespace Mankala.Tests;
 
-public class UnitTest1
+public class BoardTests
 {
 	[Theory]
 	[InlineData(1)]	[InlineData(4)]	[InlineData(6)]	[InlineData(50)] [InlineData(0)]

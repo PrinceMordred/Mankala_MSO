@@ -9,7 +9,7 @@ public class BoardMankala : Board
 	{
 	}
 
-	public BoardMankala()
+	public BoardMankala() : base()
 	{
 	}
 

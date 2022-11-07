@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mankala
 {
-    internal class MankalaRuleset : IRuleset
+    public sealed class MankalaRuleset : IRuleset
     {
         public int numHolesPerPlayer() => 6;
         public int numStartStones()    => 4;
