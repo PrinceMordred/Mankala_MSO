@@ -1,9 +1,15 @@
-﻿namespace Mankala.GameLogics;
+﻿using Mankala.Rulesets;
+
+namespace Mankala.GameLogics;
 
 public class WariGameLogic : GameLogic
 {
-	public WariGameLogic(Board board) : base(board)
-	{
-		
-	}
+    public WariGameLogic(Board board, IRuleset ruleset) : base(board, ruleset)
+    {
+    }
+
+    public override void MakeMove(int holeIndex, int otherPlayerIndex)
+    {
+        throw new NotImplementedException();
+    }
 }
