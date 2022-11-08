@@ -110,7 +110,7 @@ public class Board
 
 	/// <summary> Aims to wrap a reference to a hole (which is a value type),
 	/// because a tuple with a ref byte is not valid code in .NET 6 </summary>
-	public struct HoleReference
+	public class HoleReference
 	{
 		private readonly int _holeIndex;
 		private readonly Board _board;
