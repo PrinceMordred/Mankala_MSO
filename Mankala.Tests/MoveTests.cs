@@ -37,7 +37,7 @@ public class MoveTests
 	public void MakeMove_BasedOnExistingRuleSet_MakesCorrectPlayerGoNext(Ruleset rulesetType)
 	{
 		// Arrange
-		var ruleset = RulesetFactory.CreateRuleSet(rulesetType);
+		var ruleset = RulesetSimpleFactory.CreateRuleSet(rulesetType);
 
 		// Act
 

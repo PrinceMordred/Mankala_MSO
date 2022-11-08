@@ -11,7 +11,7 @@ namespace Mankala
         Mankala
     }
     
-    public static class RulesetFactory // follows the Simple Factory Pattern
+    public static class RulesetSimpleFactory
     {
         public static IRuleset CreateRuleSet(Ruleset ruleset) => ruleset switch
         {
