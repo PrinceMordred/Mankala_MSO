@@ -2,7 +2,7 @@
 
 namespace Mankala;
 
-public abstract class Board
+public class Board
 {
 	protected readonly byte _stonesPerHole;
 	protected readonly byte _holesPerPlayer;
@@ -10,17 +10,17 @@ public abstract class Board
 	protected byte[] _holes; // n holes for p1, 1 base hole for p1, n holes for p2, 1 base hole for p2
 	public byte[] GetHoles => _holes;
 	
-	public virtual int IndexOfBaseHoleP1 => _holesPerPlayer;
-	public virtual int IndexOfBaseHoleP2 => _holes.Length - 1;
-	public virtual Range RangeOfHolesP1 => new(0, IndexOfBaseHoleP1);
-	public virtual Range RangeOfHolesP2 => new(IndexOfBaseHoleP1 + 1, IndexOfBaseHoleP2);
+	public int   IndexOfBaseHoleP1 => _holesPerPlayer;
+	public int   IndexOfBaseHoleP2 => _holes.Length - 1;
+	public Range RangeOfHolesP1    => new(0, IndexOfBaseHoleP1);
+	public Range RangeOfHolesP2    => new(IndexOfBaseHoleP1 + 1, IndexOfBaseHoleP2);
 	
-	public virtual byte   GetBaseP1  => _holes[IndexOfBaseHoleP1];
-	public virtual byte   GetBaseP2  => _holes[IndexOfBaseHoleP2];
-	public virtual byte[] GetHolesP1 => _holes[RangeOfHolesP1];
-	public virtual byte[] GetHolesP2 => _holes[RangeOfHolesP2];
+	public byte   GetBaseP1  => _holes[IndexOfBaseHoleP1];
+	public byte   GetBaseP2  => _holes[IndexOfBaseHoleP2];
+	public byte[] GetHolesP1 => _holes[RangeOfHolesP1];
+	public byte[] GetHolesP2 => _holes[RangeOfHolesP2];
 
-	protected virtual bool _IsBaseHoleOf(int player, int i) => player switch
+	protected bool _IsBaseHoleOf(int player, int i) => player switch
 	{
 		1 => i == _holesPerPlayer,
 		2 => i == _holes.Length - 1,
@@ -52,7 +52,7 @@ public abstract class Board
 		}
 	}
 
-	protected virtual void InitializeBoard()
+	protected void InitializeBoard()
 	{
 		_holes = new byte[2 + _holesPerPlayer * 2]; // 2 base-holes and every player hole
 		Array.Fill(_holes, _stonesPerHole, 0,                   _holesPerPlayer);
@@ -60,7 +60,7 @@ public abstract class Board
 	}
 
 	/// <returns>A tuple containing: board ASCII art, width of the art, width of a single hole, offset of the first player hole</returns>
-	public virtual (string, int, int, int) PrintBoard()
+	public (string, int, int, int) PrintBoard()
 	{
 		// Calculate widths to base printing on
 		var holeDisplayWidth = _holes.Max().ToString().Length + 2;
@@ -102,7 +102,11 @@ public abstract class Board
 		return (sb.ToString(), width, holeDisplayWidth, 2);
 	}
 
-	/// <param name="holeIndex">the hole from which the move is performed, AKA the hole which stones are spread</param>
-	/// <param name="otherPlayerIndex">The index of the OTHER player</param>
-	public abstract void MakeMove(int holeIndex, int otherPlayerIndex);
+	/// <summary> Infinitely loops through the holes </summary>
+	public IEnumerator<(byte, HoleKind)> GetHolesCycle()
+	{
+		throw new NotImplementedException();
+	}
+	
+	public enum HoleKind { MainHoleP1, MainHoleP2, NormalHoleP1, NormalHoleP2 }
 }

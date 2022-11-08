@@ -1,4 +1,6 @@
-﻿namespace Mankala.Tests;
+﻿using Mankala.Rulesets;
+
+namespace Mankala.Tests;
 
 public class MoveTests
 {
