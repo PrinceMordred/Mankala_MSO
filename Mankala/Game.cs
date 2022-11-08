@@ -100,7 +100,7 @@ void promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
 	stringBuilder.AppendLine(!selectUpperHole ? "^\n|\n" : "\n\n");
 	
 	// Explain what the hell is going on
-	stringBuilder.Append("Use your arrow keys to\nmove the arrow, and press\nenter enter to make a move\n\n> ");
+	stringBuilder.Append("Use your arrow keys to\nmove the arrow, and press\nenter to make a move\n\n> ");
 	
 	// print to console
 	Console.Write(stringBuilder);
