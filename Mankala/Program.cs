@@ -4,7 +4,7 @@ using Mankala;
 const byte startingStonesPerHole = 4;
 const byte holesPerPlayer = 3;
 
-var board = new BoardMankala();
+var board = new Board(); // No constructor means that user input is requested
 
 // remember the state of who (and how) selects the next hole to make a move
 var playerOneIsOn = true;
@@ -16,7 +16,7 @@ while (true)
 	// interpret current state
 	ref var currentHoleIndex = ref playerOneIsOn ? ref selectedHoleP1 : ref selectedHoleP2;
 	var rangeOfHolesOfCurrentPlayer = playerOneIsOn ? board.RangeOfHolesP1 : board.RangeOfHolesP2;
-	var otherPlayerIndex = playerOneIsOn ? 2 : 1; 
+	var otherPlayerIndex = playerOneIsOn ? 2 : 1;
 	
 	// Ask the player to make a move
 	Console.Clear();
