@@ -25,10 +25,10 @@ namespace Mankala
         // variables for a Ruleset
         public int numHolesPerPlayer();
         public int numStartStones();
-
+        
         // methods for a ruleset
         public bool CheckValidMove(Board state, int clickedHole);
         public bool CheckWin      (Board state);
-        //public int NextPlayer     (Board state);
+        public Player NextPlayer     (Player p, Board before, Board after);
     }
 }

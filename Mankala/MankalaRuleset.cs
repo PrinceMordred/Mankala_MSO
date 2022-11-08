@@ -23,11 +23,17 @@ namespace Mankala
                     return false;
             return true;
         }
-        /*
-        public Player NextPlayer(Player p, Board state)
+        
+        public Player NextPlayer(Player p, Board before, Board after)
         {
-            return p;
+            // todo : check if the last stone was dropped in an empty hole on the player's side
+            bool scoredPoint = after.GetHoles[p.PlayerNumber == 1 ? numHolesPerPlayer() : 13] > before.GetHoles[p.PlayerNumber == 1 ? numHolesPerPlayer() : 13];
+            bool lastStoneInBaseHole = after.GetHoles[p.PlayerNumber == 1 ? numHolesPerPlayer() +1 : 13] > before.GetHoles[p.PlayerNumber == 1 ? numHolesPerPlayer() +1 : 0];
+            if (scoredPoint && lastStoneInBaseHole)
+                return p;
+            else
+                return p.PlayerNumber == 1 ? new Player(2, ConsoleColor.Red, 0, false) : new Player(1, ConsoleColor.Blue, 0, false);
         }
-        */
+        
     }
 }

@@ -21,7 +21,6 @@ while (true)
 	// Ask the player to make a move
 	Console.Clear();
 	promptSelectHole(ref currentHoleIndex, rangeOfHolesOfCurrentPlayer);
-	Console.Beep();
 	
 	// Make instructed move
 	board.MakeMove(currentHoleIndex, otherPlayerIndex);
