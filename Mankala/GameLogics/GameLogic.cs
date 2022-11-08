@@ -3,7 +3,7 @@
 public abstract class GameLogic
 {
 	private Board _board;
-	private IEnumerator<(byte, Board.HoleKind)> HoleCycle => _board.GetHolesCycle(); 
+	private IEnumerator<Board.HoleReference> HoleCycle => _board.GetHolesCycle(); 
 
 	/// <param name="holeIndex">the hole from which the move is performed, AKA the hole which stones are spread</param>
 	/// <param name="otherPlayerIndex">The index of the OTHER player</param>

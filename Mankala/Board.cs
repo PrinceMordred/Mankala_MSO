@@ -103,10 +103,28 @@ public class Board
 	}
 
 	/// <summary> Infinitely loops through the holes </summary>
-	public IEnumerator<(byte, HoleKind)> GetHolesCycle()
+	public IEnumerator<HoleReference> GetHolesCycle()
 	{
 		throw new NotImplementedException();
 	}
-	
+
+	/// <summary> Aims to wrap a reference to a hole (which is a value type),
+	/// because a tuple with a ref byte is not valid code in .NET 6 </summary>
+	public class HoleReference
+	{
+		private readonly int _holeIndex;
+		private readonly Board _board;
+		
+		public readonly HoleKind HoleKind;
+		public ref byte StoneCount => ref _board._holes[_holeIndex];
+
+		internal HoleReference(int holeIndex, HoleKind holeKind, Board board)
+		{
+			_holeIndex  = holeIndex;
+			HoleKind    = holeKind;
+			_board		= board;
+		}
+	}
+
 	public enum HoleKind { MainHoleP1, MainHoleP2, NormalHoleP1, NormalHoleP2 }
 }
