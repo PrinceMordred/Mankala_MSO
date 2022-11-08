@@ -2,10 +2,11 @@
 
 namespace Mankala;
 
-public class Board
+public abstract class Board
 {
 	protected readonly byte _stonesPerHole;
 	protected readonly byte _holesPerPlayer;
+	public IRuleset ruleset;
 	
 	protected byte[] _holes; // n holes for p1, 1 base hole for p1, n holes for p2, 1 base hole for p2
 	public byte[] GetHoles => _holes;
@@ -15,10 +16,10 @@ public class Board
 	public Range RangeOfHolesP1    => new(0, IndexOfBaseHoleP1);
 	public Range RangeOfHolesP2    => new(IndexOfBaseHoleP1 + 1, IndexOfBaseHoleP2);
 	
-	public byte   GetBaseP1  => _holes[IndexOfBaseHoleP1];
-	public byte   GetBaseP2  => _holes[IndexOfBaseHoleP2];
-	public byte[] GetHolesP1 => _holes[RangeOfHolesP1];
-	public byte[] GetHolesP2 => _holes[RangeOfHolesP2];
+	public virtual byte   GetBaseP1  => _holes[IndexOfBaseHoleP1];
+	public virtual byte   GetBaseP2  => _holes[IndexOfBaseHoleP2];
+	public virtual byte[] GetHolesP1 => _holes[RangeOfHolesP1];
+	public virtual byte[] GetHolesP2 => _holes[RangeOfHolesP2];
 
 	protected bool _IsBaseHoleOf(int player, int i) => player switch
 	{
@@ -28,10 +29,18 @@ public class Board
 			"A player was referenced with an incorrect index, which should be 1 or 2: " + player.ToString())
 	};
 
-	public Board(byte stonesPerHole, byte holesPerPlayer)
+	public Board(byte stonesPerHole, byte holesPerPlayer, IRuleset ruleset)
 	{
 		_stonesPerHole = stonesPerHole;
 		_holesPerPlayer = holesPerPlayer;
+		this.ruleset = ruleset;
+		InitializeBoard();
+	}
+	public Board(IRuleset ruleset)
+	{
+		_stonesPerHole = prompt("How many stones should every hole have?");
+		_holesPerPlayer = prompt("How many holes should evey player have?");
+		this.ruleset = ruleset;
 		InitializeBoard();
 	}
 	public Board()
@@ -60,7 +69,7 @@ public class Board
 	}
 
 	/// <returns>A tuple containing: board ASCII art, width of the art, width of a single hole, offset of the first player hole</returns>
-	public (string, int, int, int) PrintBoard()
+	public virtual (string, int, int, int) PrintBoard()
 	{
 		// Calculate widths to base printing on
 		var holeDisplayWidth = _holes.Max().ToString().Length + 2;
