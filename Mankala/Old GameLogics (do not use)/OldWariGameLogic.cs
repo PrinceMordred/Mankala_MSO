@@ -1,6 +1,6 @@
 ﻿using Mankala.Rulesets;
 
-namespace Mankala.GameLogics;
+namespace Mankala.GameLogics.DontUse;
 
 public class WariGameLogic : GameLogic
 {

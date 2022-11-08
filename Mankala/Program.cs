@@ -1,9 +1,8 @@
 ﻿using System.Text;
 using Mankala;
-using Mankala.GameLogics;
 using Mankala.Rulesets;
 
-#region Set Up RuleSet
+#region Set Up Ruleset
 var ruleSet = promptRuleset();
 IRuleset promptRuleset()
 {
@@ -11,7 +10,6 @@ IRuleset promptRuleset()
 
 These are your options:
 	- Mankala
-	- Wari
 
 > "); //TODO: werk deze lijst bij
 
@@ -48,14 +46,15 @@ Board promptBoard()
 }
 #endregion
 
-GameLogic gameLogic = new 
+var game = new Game(board, ruleSet);
 
 // remember the state of who (and how) selects the next hole to make a move
 var playerOneIsOn = true;
 int selectedHoleP1 = 0;
 int selectedHoleP2 = board.IndexOfBaseHoleP2 - 1;
 
-while (true)
+Player? winner;
+while ((winner = game.GetWinner()) == null) // game loop
 {
 	// interpret current state
 	ref var currentHoleIndex = ref playerOneIsOn ? ref selectedHoleP1 : ref selectedHoleP2;
@@ -67,10 +66,14 @@ while (true)
 	promptSelectHole(ref currentHoleIndex, rangeOfHolesOfCurrentPlayer);
 	
 	// Make instructed move
-	board.MakeMove(currentHoleIndex, otherPlayerIndex);
+	game.MakeMove(currentHoleIndex);
 	playerOneIsOn = !playerOneIsOn;
 }
 
+Console.WriteLine("\n\nWe have a winner!");
+Console.Write($"{winner} won with a score of {winner.Score}");
+
+#region Console interactions
 // Converts selectedHoleOfCurrentPlayer to the new selected hole index
 void promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
 {
@@ -88,10 +91,7 @@ void promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
 			// Reset cursor position after input
 			var (x, y) = Console.GetCursorPosition();
 			Console.SetCursorPosition(x -1, y);
-		}
-		catch (Exception e)
-		{
-		}
+		} catch (Exception e) { }
 		
 		switch (inputKey)
 		{
@@ -105,7 +105,6 @@ void promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
 		// Clamp selected hole to player's holes
 		currentHoleIndex = Math.Clamp(currentHoleIndex, holeIndexes.Start.Value, holeIndexes.End.Value - 1);
 		
-
 		// Move the arrow to the new selected hole
 		moveSelectionArrow(currentHoleIndex);
 	}
@@ -151,3 +150,4 @@ void promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
 	var arrowY = selectUpperHole ? 0 : 2 + 5; // padding + board height
 	return (holesOffset, holeWidth, arrowY);
 }
+#endregion

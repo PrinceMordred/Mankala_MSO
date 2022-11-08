@@ -20,5 +20,10 @@ namespace Mankala
             Score = _score;
             IsAi = _isAi;
         }
+
+        public override string ToString()
+        {
+            return "Player " + PlayerNumber;
+        }
     }
 }

@@ -16,13 +16,12 @@
     
     public interface IRuleset
     {
-        // variables for a Ruleset
-        public int numHolesPerPlayer();
-        public int numStartStones();
+        public int numHolesPerPlayer { get; set; }
+        public int numStartStones    { get; set; }
         
-        // methods for a ruleset
+        
         public bool CheckValidMove(Board state, int clickedHole);
         public bool CheckWin      (Board state);
-        public Player NextPlayer     (Player p, Board before, Board after);
+        public Player NextPlayer  (Player lastPlayer, Board.HoleReference lastHole);
     }
 }

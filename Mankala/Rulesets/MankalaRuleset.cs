@@ -2,21 +2,18 @@
 {
     public sealed class MankalaRuleset : IRuleset
     {
-        public int numHolesPerPlayer() => 6;
-        public int numStartStones()    => 4;
+        public int numHolesPerPlayer { get; set; } = 6;
+        public int numStartStones    { get; set; } = 4;
         public bool CheckValidMove(Board board, int clickedHole)
         {
             return board.GetHoles[clickedHole] != 0;
         }
 
-        public bool CheckWin(Board state)
-        {
-            IEnumerable<byte> s = state.GetHolesP1;
-            foreach (byte b in s)
-                if (b != 0)
-                    return false;
-            return true;
-        }
+        public bool CheckWin(Board state) =>
+            state.GetHolesP1.All(x => x == 0)
+         || state.GetHolesP2.All(x => x == 0);
+        //TODO: only checks if the game is OVER, not who won.
+        //TODO: Also, if player 1 is up but p2 has no stones, the game ends which should not happen
         
         public Player NextPlayer(Player p, Board before, Board after)
         {

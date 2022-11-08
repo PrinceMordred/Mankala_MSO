@@ -1,4 +1,4 @@
-﻿namespace Mankala.GameLogics;
+﻿namespace Mankala.GameLogics.DontUse;
 using Mankala;
 using Mankala.Rulesets;
 

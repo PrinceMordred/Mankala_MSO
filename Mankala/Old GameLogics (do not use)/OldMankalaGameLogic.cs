@@ -1,7 +1,7 @@
 ﻿using Mankala.GameLogics;
 using Mankala.Rulesets;
 
-namespace Mankala;
+namespace Mankala.GameLogics.DontUse;
 
 public class MankalaGameLogic : GameLogic
 {

@@ -7,7 +7,7 @@ public class BoardTests
 	public void InitialBoard_WithSpecifiedStoneCount_ShouldContainCorrectNumberOfStones(byte stonesPerHole)
 	{
 		// Arrange
-		var board = new BoardMankala(stonesPerHole, 6);
+		var board = new Board(stonesPerHole, 6);
 
 		// Act
 
@@ -22,7 +22,7 @@ public class BoardTests
 	public void InitialBoard_WithSpecifiedHoleCount_ShouldContainCorrectNumberOfHoles(byte holesPerPlayer)
 	{
 		// Arrange
-		var board = new BoardMankala(4, holesPerPlayer);
+		var board = new Board(4, holesPerPlayer);
 
 		// Act
 
