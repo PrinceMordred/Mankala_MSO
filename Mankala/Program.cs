@@ -1,10 +1,54 @@
 ﻿using System.Text;
 using Mankala;
+using Mankala.GameLogics;
+using Mankala.Rulesets;
 
-const byte startingStonesPerHole = 4;
-const byte holesPerPlayer = 3;
+#region Set Up RuleSet
+var ruleSet = promptRuleset();
+IRuleset promptRuleset()
+{
+	Console.Write(@"What ruleset would you like the game to follow?
 
-var board = new Board(); // No constructor means that user input is requested
+These are your options:
+	- Mankala
+	- Wari
+
+> "); //TODO: werk deze lijst bij
+
+	var success = Enum.TryParse<Ruleset>(Console.ReadLine(), out var ruleset);
+	Console.Clear();
+
+	if (success) return RulesetSimpleFactory.CreateRuleSet(ruleset);
+	
+	// If we reach this code, the input was invalid
+	Console.WriteLine("Please enter some valid input...");
+	return promptRuleset();
+}
+#endregion
+
+#region Set Up Board
+var board = promptBoard(); // No constructor means that user input is requested in the constructor
+Board promptBoard()
+{
+	var stonesPerHole  = prompt("How many stones should every hole have?");
+	var holesPerPlayer = prompt("How many holes should evey player have?");
+
+	byte prompt(string question)
+	{
+		Console.Write(question + " > ");
+		if (byte.TryParse(Console.ReadLine(), out byte input))
+			return input;
+
+		// If we reach this code, the input was invalid
+		Console.WriteLine("Please enter some valid input. > ");
+		return prompt(question);
+	}
+
+	return new Board(stonesPerHole, holesPerPlayer);
+}
+#endregion
+
+GameLogic gameLogic = new 
 
 // remember the state of who (and how) selects the next hole to make a move
 var playerOneIsOn = true;
