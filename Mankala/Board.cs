@@ -2,7 +2,7 @@
 
 namespace Mankala;
 
-public class Board
+public class Board : IObservable<string>
 {
 	protected readonly byte _numStartStones;
 	protected readonly byte _numNormalHolesPerPlayer;
@@ -20,8 +20,8 @@ public class Board
         2 => new Range(GetMainHoleIndex(playerNumber) + 1, _holes.Length - 1),
         _ => throw new ArgumentOutOfRangeException(nameof(playerNumber), playerNumber, "Player number must be 1 or 2")
     };
-    public byte   GetMainHole(int playerNumber)  => _holes[GetMainHoleIndex(playerNumber)];
-	public byte[] GetHoles(int playerNumber) => _holes[GetRangeOfHoles(playerNumber)];
+    public byte   GetMainHole(int playerNumber) => _holes[GetMainHoleIndex(playerNumber)];
+    public byte[] GetHoles(int playerNumber)    => _holes[GetRangeOfHoles(playerNumber)];
 
     public bool IsMainHoleOf(int player, int i) => player switch
 	{
@@ -102,9 +102,18 @@ public class Board
 		private readonly Board _board;
 		
 		public readonly HoleKind HoleKind;
-		public ref byte StoneCount => ref _board._holes[_holeIndex];
 
-		internal HoleReference(int holeIndex, HoleKind holeKind, Board board)
+		public byte StoneCount
+		{
+			get => _board._holes[_holeIndex];
+			set
+			{
+				_board._holes[_holeIndex] = value;
+				_board.NotifyObserversSuccess($"Added a stone on index {_holeIndex}");
+			}
+		}
+
+		internal HoleReference(int holeIndex, Board board)
 		{
 			_holeIndex  = holeIndex;
 			HoleKind    = holeKind;
@@ -113,4 +122,23 @@ public class Board
 	}
 
 	public enum HoleKind { MainHoleP1, MainHoleP2, NormalHoleP1, NormalHoleP2 }
+
+	
+	// Observer pattern
+	private List<IObserver<string>> _observers = new();
+	protected void NotifyObserversSuccess(string message)
+	{
+		foreach (var observer in _observers)
+			observer.OnNext(message);
+	}
+	protected void NotifyObserversError(Exception exception)
+	{
+		foreach (var observer in _observers)
+			observer.OnError(exception);
+	}
+	public IDisposable Subscribe(IObserver<string> observer)
+	{
+		_observers.Add(observer);
+		return null; // No unsubscribing :)
+	}
 }
