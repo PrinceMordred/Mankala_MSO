@@ -8,7 +8,7 @@ public abstract class GameLogic : IObservable<string>
 	
 	public Player GetP1 => _playerList[0];
 	public Player GetP2 => _playerList[1];
-    public Player otherPlayer(Player p) => p.PlayerNumber == 1 ? GetP1 : GetP2;
+    public Player OtherPlayer(Player p) => p.PlayerNumber == 1 ? GetP2 : GetP1;
 
     protected int _numNormalHolesPerPlayer;
 	protected int _numMainHolesPerPlayer;
@@ -48,12 +48,15 @@ public abstract class GameLogic : IObservable<string>
 		// make the move && change current player
 		var hCycle = _board.GetHolesCycle(holeIndex);
         
-		int stonesToUse = _board.GetHole(holeIndex);
+		hCycle.MoveNext();
+        var hCycleCurrent = hCycle.Current;
+		int stonesToUse = hCycleCurrent.StoneCount;
+        hCycleCurrent.StoneCount =  0;
+
         while (hCycle.MoveNext() && stonesToUse > 0)
         {
-	        var hCycleCurrent = hCycle.Current;
-	        
-	        if (_board.IsMainHoleOf(otherPlayer(player).PlayerNumber, hCycleCurrent._holeIndex))
+            hCycleCurrent = hCycle.Current;
+			if (_board.IsMainHoleOf(OtherPlayer(player).PlayerNumber, hCycleCurrent._holeIndex))
 				continue;
 			hCycleCurrent.StoneCount += 1;
 			--stonesToUse;

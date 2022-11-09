@@ -8,21 +8,9 @@ public class MankalaGameLogic : GameLogic
 
 	public override Player? GetWinner()
 	{
-		//check if one of the players has no stones left
-		var Pred1 = true;
-		var Pred2 = true;
-        foreach (var stones in _board.GetHoles(1))
-        {
-            if (stones != 0)
-                Pred1 = false;
-                break;
-        }
-        foreach (var stones in _board.GetHoles(2))
-        {
-            if (stones != 0)
-                Pred2 = false;
-                break;
-        }
+        //check if one of the players has no stones left
+        bool Pred1 = _board.GetHoles(1).All(x => x == 0) && CurrentPlayer.PlayerNumber == 1;
+        bool Pred2 = _board.GetHoles(2).All(x => x == 0) && CurrentPlayer.PlayerNumber == 2;
 		if ( Pred1 || Pred2)
         {
             //if so, the player with the most stones in the main holes wins
@@ -33,11 +21,11 @@ public class MankalaGameLogic : GameLogic
 
     protected override Player NextPlayer(Player player, int lastHoleIndex)
 	{
-        return otherPlayer(player);
+        return OtherPlayer(player);
     }
 
 	public override float DetermineScore(Player p)
 	{
-		throw new NotImplementedException();
-	}
+        return _board.GetMainHole(p.PlayerNumber);
+    }
 }

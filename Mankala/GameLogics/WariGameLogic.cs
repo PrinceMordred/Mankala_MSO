@@ -13,7 +13,7 @@ public class WariGameLogic : GameLogic
 
 	protected override Player NextPlayer(Player player, int lastHoleIndex)
     {
-		return otherPlayer(player); //TODO
+		return OtherPlayer(player); //TODO
     }
 
 	public override float DetermineScore(Player p)
