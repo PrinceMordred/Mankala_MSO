@@ -10,13 +10,13 @@ public class Board
 	protected byte[] _holes; // n holes for p1, 1 base hole for p1, n holes for p2, 1 base hole for p2
 	public byte[] GetHoles => _holes;
 	
-	public int   IndexOfBaseNumNormalHoleP1 => _numNormalHolesPerPlayer;
-	public int   IndexOfBaseHoleP2 => _holes.Length - 1;
-	public Range RangeOfHolesP1    => new(0, IndexOfBaseNumNormalHoleP1);
-	public Range RangeOfHolesP2    => new(IndexOfBaseNumNormalHoleP1 + 1, IndexOfBaseHoleP2);
+	public int   IndexOfMainHoleP1 => _numNormalHolesPerPlayer;
+	public int   IndexOfMainHoleP2 => _holes.Length - 1;
+	public Range RangeOfHolesP1    => new(0, IndexOfMainHoleP1);
+	public Range RangeOfHolesP2    => new(IndexOfMainHoleP1 + 1, IndexOfMainHoleP2);
 	
-	public byte   GetBaseP1  => _holes[IndexOfBaseNumNormalHoleP1];
-	public byte   GetBaseP2  => _holes[IndexOfBaseHoleP2];
+	public byte   GetBaseP1  => _holes[IndexOfMainHoleP1];
+	public byte   GetBaseP2  => _holes[IndexOfMainHoleP2];
 	public byte[] GetHolesP1 => _holes[RangeOfHolesP1];
 	public byte[] GetHolesP2 => _holes[RangeOfHolesP2];
 

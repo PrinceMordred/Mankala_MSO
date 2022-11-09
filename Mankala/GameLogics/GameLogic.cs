@@ -9,10 +9,13 @@ public abstract class GameLogic
 	protected int numStartStones;
 	
 	// factory methods
-	protected abstract bool    CheckValidMove(int selectedHole);
+	protected virtual bool    CheckValidMove(Player player, int selectedHole)
+	{
+        return !(_board.GetHoles[selectedHole] == 0);
+    }
 	public abstract    Player? GetWinner();
-	protected abstract Player  NextPlayer(Player player);
-
+	protected abstract Player  NextPlayer(Player player, int lastHoleIndex);
+	
 	public GameLogic(Board board)
 	{
 		_board   = board;
@@ -21,23 +24,20 @@ public abstract class GameLogic
 	
 	/// <summary> Performs the move and all logics related </summary>
 	/// <returns> The player who is up next </returns>
-	public virtual Player MakeMove(Player player, int holeIndex) // Template method
+	public virtual (Player, int) MakeMove(Player player, int holeIndex) // Template method //returns the player who played and the index of the last hole
 	{
-		if (!CheckValidMove())
-			return player;
-		
-		PerformMove(holeIndex, otherPlayerIndex);
+		if (!CheckValidMove(player, holeIndex))
+			return (player, -1);
 
-		return NextPlayer(player);
+		return (NextPlayer(player, PerformMove(holeIndex)), -1);
 	}
 	
-	public int PerformMove(int holeIndex, int otherPlayerIndex)
+	public int PerformMove(int holeIndex)
 	{
 		int finalHoleIndex = 0;
 		// pick up all stones out of a hole
 		byte stonesToSpread = _board.GetHoles[holeIndex];
 		_board.GetHoles[holeIndex] = 0;
-		Board.HoleKind oppositeHoleIndex = otherPlayerIndex == 1 ? Board.HoleKind.MainHoleP1 : Board.HoleKind.MainHoleP2;
 		
 		// spread stones
 		var holeCycle = _board.GetHolesCycle();
@@ -46,7 +46,7 @@ public abstract class GameLogic
 			// move to next hole
 			holeCycle.MoveNext();
 			// if the hole is not the other player's base hole, put a stone in it
-			if (holeCycle.Current.HoleKind == oppositeHoleIndex)
+			if (holeCycle.Current.HoleKind is Board.HoleKind.MainHoleP2)
 				continue;
 			else
 			{

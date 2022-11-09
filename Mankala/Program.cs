@@ -50,7 +50,7 @@ These are your options:
 // remember the state of who (and how) selects the next hole to make a move
 var playerOneIsOn = true;
 int selectedHoleP1 = 0;
-int selectedHoleP2 = board.IndexOfBaseHoleP2 - 1;
+int selectedHoleP2 = board.IndexOfMainHoleP2 - 1;
 
 Player? winner;
 while ((winner = gameLogic.GetWinner()) == null) // game loop

@@ -6,11 +6,6 @@ public class MankalaGameLogic : GameLogic
 	{
 	}
 
-	protected override bool CheckValidMove(int selectedHole)
-	{
-		return _board.GetHoles[selectedHole] != 0;
-	}
-
 	public override Player? GetWinner()
 	{
 		throw new NotImplementedException();
@@ -22,8 +17,20 @@ public class MankalaGameLogic : GameLogic
 		 */
 	}
 
-	protected override Player NextPlayer(Player player)
+	protected override Player NextPlayer(Player player, int lastHoleIndex)
 	{
-		throw new NotImplementedException();
-	}
+        // check if the lastHoleIndex is on the playes side
+        if (player.PlayerNumber == 1)
+        {
+            if (lastHoleIndex <= _board.IndexOfMainHoleP1)
+                return player;
+            return new Player(2, ConsoleColor.Red, 0, false);
+        }
+        else
+        {
+            if (lastHoleIndex > _board.IndexOfMainHoleP1 && lastHoleIndex <= _board.IndexOfMainHoleP2)
+                return player;
+            return new Player(1, ConsoleColor.Blue, 0, false);
+        }
+    }
 }
