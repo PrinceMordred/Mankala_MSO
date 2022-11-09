@@ -26,7 +26,7 @@ board.Subscribe(logger);
 Board promptBoard()
 {
 	var stonesPerHole  = prompt("How many stones should every hole have?",
-		x => (byte.TryParse(x, out var parsed), parsed));
+		x => (byte.TryParse(x, out var parsed) && parsed > 0 , parsed));
 	var holesPerPlayer = prompt("How many holes should evey player have?",
 		x => (byte.TryParse(x, out var parsed) && parsed > 1, parsed));
 
@@ -38,11 +38,11 @@ Player promptPlayer(int playerNumber)
 {
 	var name = prompt($"What will the name be of player {playerNumber}?",
 		x => (!string.IsNullOrWhiteSpace(x), x),
-		"That's a weird name. Not judging, but please give another name.");
+		"[ERROR] That's a weird name. Not judging, but please give another name.");
 
 	var color = prompt("What color will this player be? (Examples: Red, Blue)",
 		x => (Enum.TryParse<ConsoleColor>(x, out var parsed), parsed),
-		"That's an unknown color to us. Please retry.");
+		"[ERROR] That's an unknown color to us. Please retry.");
 
 	return new Player(playerNumber, name, color, -1);
 }
@@ -81,6 +81,7 @@ while ((winner = gameLogic.GetWinner()) == null) // game loop
 	gameLogic.MakeMove(gameLogic.CurrentPlayer, GetCurrentSelectedHole());
 }
 
+Console.Clear();
 printBoardAndSelectionArrow(true);
 
 Console.WriteLine("\n\nWe have a winner!");
@@ -98,7 +99,7 @@ void promptSelectHole(int currentHoleIndex, Range holeIndexes)
 	moveSelectionArrow(currentHoleIndex); // Move the arrow to the standard/last known selected hole
 
 	ConsoleKey inputKey;
-	while ((inputKey = Console.ReadKey().Key) != ConsoleKey.Enter) // Keep moving the selection arrow until player presses enter
+	while ((inputKey = Console.ReadKey().Key) is not (ConsoleKey.Enter or ConsoleKey.Spacebar)) // Keep moving the selection arrow until player presses enter
 	{
 		try // Sadly, not every computer likes this code
 		{
@@ -158,7 +159,7 @@ void promptSelectHole(int currentHoleIndex, Range holeIndexes)
 	stringBuilder.AppendLine(!selectUpperHole ? "^\n|\n" : "\n\n");
 	
 	// Explain what the hell is going on
-	stringBuilder.Append("Use your arrow keys to\nmove the arrow, and press\nenter to make a move\n\n> ");
+	stringBuilder.Append("Use your arrow keys to move\nthe arrow, and press enter or\nspacebar to make a move\n\n> ");
 	
 	// print to console
 	Console.Write(stringBuilder);

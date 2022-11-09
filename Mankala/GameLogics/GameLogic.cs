@@ -22,8 +22,8 @@ public abstract class GameLogic : IObservable<string>
 		return false;
 		
 	}
-	public abstract Player? GetWinner();
-	protected abstract Player NextPlayer(Player player, int lastHoleIndex);
+	public abstract    Player? GetWinner(); //todo: what if it's a tie? (Not properly implemented everywhere)
+	protected abstract Player  NextPlayer(Player player, int lastHoleIndex);
 	
 	public GameLogic(Board board, Player[] pList)
 	{
@@ -38,32 +38,35 @@ public abstract class GameLogic : IObservable<string>
 	{
 		NotifyObserversSuccess($"{CurrentPlayer.PlayerName} chose to spread the stones in hole {holeIndex}");
 		
-		// check if move valid make move 
-		if (CheckValidMove(CurrentPlayer, holeIndex))
-			PerformMove(CurrentPlayer, holeIndex);
+		if (!CheckValidMove(CurrentPlayer, holeIndex)) return;
+		var lastHoleAffected = PerformMove(CurrentPlayer, holeIndex);
+		
+		CurrentPlayer = NextPlayer(p, lastHoleAffected);
 	}
 	
-	public void PerformMove(Player player, int holeIndex)
+	/// <returns> The index of the hole in which the last stone was spread </returns>
+	public int PerformMove(Player player, int holeIndex)
 	{
 		// make the move && change current player
-		var hCycle = _board.GetHolesCycle(holeIndex);
+		var holesCycle = _board.GetHolesCycle(holeIndex);
         
-		hCycle.MoveNext();
-        var hCycleCurrent = hCycle.Current;
-		int stonesToUse = hCycleCurrent.StoneCount;
-        hCycleCurrent.StoneCount =  0;
+		holesCycle.MoveNext();
+        var currentHole = holesCycle.Current;
+		var stonesToSpread = currentHole.StoneCount;
+        currentHole.StoneCount =  0;
 
-        while (hCycle.MoveNext() && stonesToUse > 0)
+        while (holesCycle.MoveNext() && stonesToSpread > 0)
         {
-            hCycleCurrent = hCycle.Current;
-			if (_board.IsMainHoleOf(OtherPlayer(player).PlayerNumber, hCycleCurrent._holeIndex))
-				continue;
-			hCycleCurrent.StoneCount += 1;
-			--stonesToUse;
-			if (stonesToUse == 0)
-				CurrentPlayer = NextPlayer(player, hCycleCurrent._holeIndex);
+            currentHole = holesCycle.Current;
+			if (_board.IsMainHoleOf(OtherPlayer(player).PlayerNumber, currentHole.HoleIndex))
+				continue; // Don't affect other player's main hole
+
+			currentHole.StoneCount += 1;
+			stonesToSpread         -= 1;
         }
-    }
+
+        return currentHole.HoleIndex;
+	}
 
 	public abstract float DetermineScore(Player p);
 	
@@ -81,27 +84,6 @@ public abstract class GameLogic : IObservable<string>
 		foreach (var observer in _observers)
 			observer.OnError(exception);
 	}
-	
-	// Event handling
-	// public event EventHandler CurrentPlayerChanged;
-	// public event EventHandler CurrentPlayerChoseHole;
-	// public event EventHandler BoardStateChanged;
-	//
-	//
-	// protected virtual void OnCurrentPlayerChanged()
-	// {
-	// 	CurrentPlayerChanged?.Invoke(this, EventArgs.Empty);
-	// }
-	//
-	// protected virtual void OnCurrentPlayerChoseHole()
-	// {
-	// 	CurrentPlayerChoseHole?.Invoke(this, EventArgs.Empty);
-	// }
-	//
-	// protected virtual void OnBoardStateChanged()
-	// {
-	// 	BoardStateChanged?.Invoke(this, EventArgs.Empty);
-	// }
 
 	public IDisposable Subscribe(IObserver<string> observer)
 	{

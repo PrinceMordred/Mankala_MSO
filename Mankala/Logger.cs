@@ -13,7 +13,8 @@ public class Logger : ILogger, IDisposable
 	
 	public Logger()
 	{
-		logWriter = new StreamWriter(_logDestination);
+		logWriter           = new StreamWriter(_logDestination);
+		logWriter.AutoFlush = true;
 	}
 	
 	public void OnCompleted()
@@ -28,7 +29,7 @@ public class Logger : ILogger, IDisposable
 	private void _Log(string value)
 	{
 		var time = DateTime.Now.ToString("G");
-		logWriter.WriteLine($"{time}: {value}");
+		logWriter.WriteLine($"[{time}]: {value}");
 	}
 	
 	public void Dispose()

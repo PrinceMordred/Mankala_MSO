@@ -102,22 +102,27 @@ public class Board : IObservable<string>
     /// because a tuple with a ref byte is not valid code in .NET 6 </summary>
     public readonly struct HoleReference
 	{
-		public readonly int _holeIndex;
+		public readonly int HoleIndex;
 		private readonly Board _board;
 
 		public byte StoneCount
 		{
-			get => _board._holes[_holeIndex];
+			get => _board._holes[HoleIndex];
 			set
 			{
-				_board._holes[_holeIndex] = value;
-				_board.NotifyObserversSuccess($"Added a stone on index {_holeIndex}");
+				var previousValue = _board._holes[HoleIndex];
+				_board._holes[HoleIndex] = value;
+
+				var delta    = value - previousValue;
+				var deltaString = (delta <= 0 ? "" : "+") + delta;
+				_board.NotifyObserversSuccess(
+					$"Set the stone count of hole {HoleIndex}, from {previousValue} to {value} ({deltaString})");
 			}
 		}
 
 		internal HoleReference(int holeIndex, Board board)
 		{
-			_holeIndex  = holeIndex;
+			HoleIndex  = holeIndex;
 			_board		= board;
 		}
 	}
