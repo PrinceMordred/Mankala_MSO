@@ -4,9 +4,14 @@ public abstract class GameLogic
 {
 	protected Board _board;
 
-	protected int numNormalHolesPerPlayer;
-	protected int numMainHolesPerPlayer;
-	protected int numStartStones;
+    private Player[] _playerList = new Player[2];
+
+	public Player currentPlayer;
+    public Player otherPlayer(Player p) => p.PlayerNumber == 1 ? _playerList[1] : _playerList[0];
+
+    protected int _numNormalHolesPerPlayer;
+	protected int _numMainHolesPerPlayer;
+	protected int _numStartStones;
 	
 	// factory methods
 	protected virtual bool    CheckValidMove(Player player, int selectedHole)
@@ -16,9 +21,10 @@ public abstract class GameLogic
 	public abstract    Player? GetWinner();
 	protected abstract Player  NextPlayer(Player player, int lastHoleIndex);
 	
-	public GameLogic(Board board)
+	public GameLogic(Board board, Player[] pList)
 	{
 		_board   = board;
+		_playerList = pList;
 	}
 
 	
@@ -32,7 +38,7 @@ public abstract class GameLogic
 		return (NextPlayer(player, PerformMove(holeIndex)), -1);
 	}
 	
-	public int PerformMove(int holeIndex)
+	public int PerformMove(Player player, int holeIndex)
 	{
 		int finalHoleIndex = 0;
 		// pick up all stones out of a hole
@@ -50,7 +56,7 @@ public abstract class GameLogic
 				continue;
 			else
 			{
-				_board.GetHoles[holeCycle.Current.StoneCount]++;
+				_board.GetHolesCopy[holeCycle.Current.StoneCount]++;
 				stonesToSpread--;
 				if (stonesToSpread == 0)
 					finalHoleIndex = holeCycle.Current.StoneCount;

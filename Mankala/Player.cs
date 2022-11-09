@@ -2,22 +2,33 @@
 {
     public class Player
     {
-        public int PlayerNumber;
-        public ConsoleColor cColor;
-        public int Score;
-        public bool IsAi;
-
-        public Player(int _PlayerNumber, ConsoleColor _cColor, int _score, bool _isAi)
+        public Player(int PlayerNumber,
+            string PlayerName,
+            ConsoleColor ConsoleColor,
+            int? LastSelectedHole)
         {
-            PlayerNumber = _PlayerNumber;
-            cColor = _cColor;
-            Score = _score;
-            IsAi = _isAi;
+            this.PlayerNumber = PlayerNumber;
+            this.PlayerName = PlayerName;
+            this.ConsoleColor = ConsoleColor;
+            this.LastSelectedHole = LastSelectedHole;
         }
 
         public override string ToString()
         {
-            return "Player " + PlayerNumber;
+            return PlayerName;
+        }
+
+        public int PlayerNumber { get; init; }
+        public string PlayerName { get; init; }
+        public ConsoleColor ConsoleColor { get; init; }
+        public int? LastSelectedHole { get; set; }
+
+        public void Deconstruct(out int PlayerNumber, out string PlayerName, out ConsoleColor ConsoleColor, out int? LastSelectedHole)
+        {
+            PlayerNumber = this.PlayerNumber;
+            PlayerName = this.PlayerName;
+            ConsoleColor = this.ConsoleColor;
+            LastSelectedHole = this.LastSelectedHole;
         }
     }
 }

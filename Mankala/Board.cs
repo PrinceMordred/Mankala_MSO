@@ -6,21 +6,26 @@ public class Board
 {
 	protected readonly byte _numStartStones;
 	protected readonly byte _numNormalHolesPerPlayer;
+	// TODO: numOfMainHolesPerPlayer
 	
-	protected byte[] _holes; // n holes for p1, 1 base hole for p1, n holes for p2, 1 base hole for p2
-	public byte[] GetHoles => _holes;
+	protected byte[] _holes; // n holes for p1, 1 main hole for p1, n holes for p2, 1 main hole for p2
+	public byte[] GetHolesCopy => _holes;
 	
-	public int   IndexOfMainHoleP1 => _numNormalHolesPerPlayer;
-	public int   IndexOfMainHoleP2 => _holes.Length - 1;
-	public Range RangeOfHolesP1    => new(0, IndexOfMainHoleP1);
-	public Range RangeOfHolesP2    => new(IndexOfMainHoleP1 + 1, IndexOfMainHoleP2);
-	
-	public byte   GetBaseP1  => _holes[IndexOfMainHoleP1];
-	public byte   GetBaseP2  => _holes[IndexOfMainHoleP2];
-	public byte[] GetHolesP1 => _holes[RangeOfHolesP1];
-	public byte[] GetHolesP2 => _holes[RangeOfHolesP2];
+    public int GetMainHoleIndex(Player player) => player.PlayerNumber==1 ? _numNormalHolesPerPlayer : _holes.Length - 1;
 
-	public bool IsMainHoleOf(int player, int i) => player switch
+
+    public Range RangeOfHoles(Player p) => p.PlayerNumber switch
+    {
+        1 => new (0, GetMainHoleIndex(p)),
+        2 => new (GetMainHoleIndex(p) + 1, _holes.Length - 1),
+        _ => throw new ArgumentOutOfRangeException(nameof(p), p, "Player number must be 1 or 2")
+    };
+
+    public byte   GetBaseP1  => _holes[_numNormalHolesPerPlayer];
+	public byte   GetBaseP2  => _holes[_holes.Length - 1];
+	public byte[] GetHoles(Player p) => _holes[RangeOfHoles(p)];
+
+    public bool IsMainHoleOf(int player, int i) => player switch
 	{
 		1 => i == _numNormalHolesPerPlayer,
 		2 => i == _holes.Length - 1,
@@ -52,9 +57,9 @@ public class Board
 
 		// Print
 		printFilledLine();
-		printHolesLine(GetHolesP2.Reverse());
+		printHolesLine(GetHoles(p2).Reverse()); //TODO
 		printBaseHoleLine(GetBaseP2, GetBaseP1);
-		printHolesLine(GetHolesP1);
+		printHolesLine(GetHoles(P1)); //TODO
 		printFilledLine();
 
 		void printFilledLine()
