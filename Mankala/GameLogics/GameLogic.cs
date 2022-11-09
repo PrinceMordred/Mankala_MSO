@@ -1,31 +1,34 @@
-﻿using Mankala.Rulesets;
+﻿namespace Mankala.GameLogics;
 
-namespace Mankala;
-
-public class Game
+public abstract class GameLogic
 {
 	protected Board _board;
-	protected IRuleset _ruleset;
 
-	public Game(Board board, IRuleset ruleset)
+	protected int numNormalHolesPerPlayer;
+	protected int numMainHolesPerPlayer;
+	protected int numStartStones;
+	
+	// factory methods
+	protected abstract bool    CheckValidMove(int selectedHole);
+	public abstract    Player? GetWinner();
+	protected abstract Player  NextPlayer(Player player);
+
+	public GameLogic(Board board)
 	{
 		_board   = board;
-		_ruleset = ruleset;
 	}
 
-	public Player MakeMove(Player player, int holeIndex)
+	
+	/// <summary> Performs the move and all logics related </summary>
+	/// <returns> The player who is up next </returns>
+	public virtual Player MakeMove(Player player, int holeIndex) // Template method
 	{
-		if (!_ruleset.CheckValidMove())
+		if (!CheckValidMove())
 			return player;
 		
 		PerformMove(holeIndex, otherPlayerIndex);
 
-		return _ruleset.NextPlayer(player);
-	}
-
-	public Player? GetWinner()
-	{
-		return _ruleset.CheckWin();
+		return NextPlayer(player);
 	}
 	
 	public int PerformMove(int holeIndex, int otherPlayerIndex)

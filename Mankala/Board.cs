@@ -4,42 +4,42 @@ namespace Mankala;
 
 public class Board
 {
-	protected readonly byte _stonesPerHole;
-	protected readonly byte _holesPerPlayer;
+	protected readonly byte _numStartStones;
+	protected readonly byte _numNormalHolesPerPlayer;
 	
 	protected byte[] _holes; // n holes for p1, 1 base hole for p1, n holes for p2, 1 base hole for p2
 	public byte[] GetHoles => _holes;
 	
-	public int   IndexOfBaseHoleP1 => _holesPerPlayer;
+	public int   IndexOfBaseNumNormalHoleP1 => _numNormalHolesPerPlayer;
 	public int   IndexOfBaseHoleP2 => _holes.Length - 1;
-	public Range RangeOfHolesP1    => new(0, IndexOfBaseHoleP1);
-	public Range RangeOfHolesP2    => new(IndexOfBaseHoleP1 + 1, IndexOfBaseHoleP2);
+	public Range RangeOfHolesP1    => new(0, IndexOfBaseNumNormalHoleP1);
+	public Range RangeOfHolesP2    => new(IndexOfBaseNumNormalHoleP1 + 1, IndexOfBaseHoleP2);
 	
-	public byte   GetBaseP1  => _holes[IndexOfBaseHoleP1];
+	public byte   GetBaseP1  => _holes[IndexOfBaseNumNormalHoleP1];
 	public byte   GetBaseP2  => _holes[IndexOfBaseHoleP2];
 	public byte[] GetHolesP1 => _holes[RangeOfHolesP1];
 	public byte[] GetHolesP2 => _holes[RangeOfHolesP2];
 
-	protected bool _IsBaseHoleOf(int player, int i) => player switch
+	public bool IsMainHoleOf(int player, int i) => player switch
 	{
-		1 => i == _holesPerPlayer,
+		1 => i == _numNormalHolesPerPlayer,
 		2 => i == _holes.Length - 1,
 		_ => throw new ArgumentOutOfRangeException(
 			"A player was referenced with an incorrect index, which should be 1 or 2: " + player.ToString())
 	};
 
-	public Board(byte stonesPerHole, byte holesPerPlayer)
+	public Board(byte numStartStones, byte numNormalHolesPerPlayer)
 	{
-		_stonesPerHole = stonesPerHole;
-		_holesPerPlayer = holesPerPlayer;
+		_numStartStones = numStartStones;
+		_numNormalHolesPerPlayer = numNormalHolesPerPlayer;
 		InitializeBoard();
 	}
 
 	protected void InitializeBoard()
 	{
-		_holes = new byte[2 + _holesPerPlayer * 2]; // 2 base-holes and every player hole
-		Array.Fill(_holes, _stonesPerHole, 0,                   _holesPerPlayer);
-		Array.Fill(_holes, _stonesPerHole, _holesPerPlayer + 1, _holesPerPlayer);
+		_holes = new byte[2 + _numNormalHolesPerPlayer * 2]; // 2 base-holes and every player hole
+		Array.Fill(_holes, _numStartStones, 0,                   _numNormalHolesPerPlayer);
+		Array.Fill(_holes, _numStartStones, _numNormalHolesPerPlayer + 1, _numNormalHolesPerPlayer);
 	}
 
 	/// <returns>A tuple containing: board ASCII art, width of the art, width of a single hole, offset of the first player hole</returns>
@@ -47,7 +47,7 @@ public class Board
 	{
 		// Calculate widths to base printing on
 		var holeDisplayWidth = _holes.Max().ToString().Length + 2;
-		var width = _holesPerPlayer * holeDisplayWidth + 4; // room for base-holes and margin
+		var width = _numNormalHolesPerPlayer * holeDisplayWidth + 4; // room for base-holes and margin
 		StringBuilder sb = new();
 
 		// Print

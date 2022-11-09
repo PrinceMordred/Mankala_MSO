@@ -1,28 +1,6 @@
 ﻿using System.Text;
 using Mankala;
-using Mankala.Rulesets;
-
-#region Set Up Ruleset
-var ruleSet = promptRuleset();
-IRuleset promptRuleset()
-{
-	Console.Write(@"What ruleset would you like the game to follow?
-
-These are your options:
-	- Mankala
-
-> "); //TODO: werk deze lijst bij
-
-	var success = Enum.TryParse<Ruleset>(Console.ReadLine(), out var ruleset);
-	Console.Clear();
-
-	if (success) return RulesetSimpleFactory.CreateRuleSet(ruleset);
-	
-	// If we reach this code, the input was invalid
-	Console.WriteLine("Please enter some valid input...");
-	return promptRuleset();
-}
-#endregion
+using Mankala.GameLogics;
 
 #region Set Up Board
 var board = promptBoard(); // No constructor means that user input is requested in the constructor
@@ -46,7 +24,28 @@ Board promptBoard()
 }
 #endregion
 
-var game = new Game(board, ruleSet);
+#region Set up game logics
+var gameLogic = promptGameLogic();
+GameLogic promptGameLogic()
+{
+	Console.Write(@"What ruleset would you like the game to follow?
+
+These are your options:
+	- Mankala
+	- Wari
+
+> "); //TODO: werk deze lijst bij
+
+	var success = Enum.TryParse<GameLogics>(Console.ReadLine(), out var gameLogic);
+	Console.Clear();
+
+	if (success) return SimpleGameFactory.CreateRuleSet(gameLogic, board);
+	
+	// If we reach this code, the input was invalid
+	Console.WriteLine("Please enter some valid input...");
+	return promptGameLogic();
+}
+#endregion
 
 // remember the state of who (and how) selects the next hole to make a move
 var playerOneIsOn = true;
@@ -54,7 +53,7 @@ int selectedHoleP1 = 0;
 int selectedHoleP2 = board.IndexOfBaseHoleP2 - 1;
 
 Player? winner;
-while ((winner = game.GetWinner()) == null) // game loop
+while ((winner = gameLogic.GetWinner()) == null) // game loop
 {
 	// interpret current state
 	ref var currentHoleIndex = ref playerOneIsOn ? ref selectedHoleP1 : ref selectedHoleP2;
@@ -66,8 +65,8 @@ while ((winner = game.GetWinner()) == null) // game loop
 	promptSelectHole(ref currentHoleIndex, rangeOfHolesOfCurrentPlayer);
 	
 	// Make instructed move
-	game.MakeMove(currentHoleIndex);
-	playerOneIsOn = !playerOneIsOn;
+	var nextPlayer = gameLogic.MakeMove(currentHoleIndex);
+	playerOneIsOn = nextPlayer.PlayerNumber == 1;
 }
 
 Console.WriteLine("\n\nWe have a winner!");
