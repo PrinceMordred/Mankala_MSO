@@ -33,8 +33,8 @@ public class MankalaGameLogic : GameLogic
 
     protected override Player NextPlayer(Player player, int lastHoleIndex)
 	{
-		throw new NotImplementedException();
-	}
+        return otherPlayer(player);
+    }
 
 	public override float DetermineScore(Player p)
 	{

@@ -10,8 +10,8 @@ public class Board
 	
 	protected byte[] _holes; // n holes for p1, 1 main hole for p1, n holes for p2, 1 main hole for p2
 	public byte[] GetHolesCopy => _holes;
-
-	public int GetMainHoleIndex(int playerNumber) => playerNumber is 1
+    public byte GetHole(int index) => _holes[index];
+    public int GetMainHoleIndex(int playerNumber) => playerNumber is 1
 		? _numNormalHolesPerPlayer : _holes.Length - 1;
     
     public Range GetRangeOfHoles(int playerNumber) => playerNumber switch
@@ -89,16 +89,19 @@ public class Board
 	}
 
 	/// <summary> Infinitely loops through the holes </summary>
-	public IEnumerator<HoleReference> GetHolesCycle()
+	public IEnumerator<HoleReference> GetHolesCycle(int start)
 	{
-		throw new NotImplementedException();
-	}
+        //loops through the holes infinitely
+        for (int i = start; true; i = (i + 1) % _holes.Length)
+            yield return new HoleReference(i, );
 
-	/// <summary> Aims to wrap a reference to a hole (which is a value type),
-	/// because a tuple with a ref byte is not valid code in .NET 6 </summary>
-	public readonly struct HoleReference
+    }
+
+    /// <summary> Aims to wrap a reference to a hole (which is a value type),
+    /// because a tuple with a ref byte is not valid code in .NET 6 </summary>
+    public readonly struct HoleReference
 	{
-		private readonly int _holeIndex;
+		public readonly int _holeIndex;
 		private readonly Board _board;
 		
 		public readonly HoleKind HoleKind;

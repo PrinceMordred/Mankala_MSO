@@ -18,7 +18,10 @@ public abstract class GameLogic
 	// factory methods
 	protected virtual bool CheckValidMove(Player player, int selectedHole)
 	{
-		throw new NotImplementedException();
+		if (_board.GetHole(selectedHole) > 0)
+			return true;
+		return false;
+		
 	}
 	public abstract Player? GetWinner();
 	protected abstract Player NextPlayer(Player player, int lastHoleIndex);
@@ -27,19 +30,34 @@ public abstract class GameLogic
 	{
 		_board   = board;
 		_playerList = pList;
+		CurrentPlayer = GetP1;
 	}
 
 	/// <summary> Performs the move and all logics related </summary>
 	/// <returns> The player who is up next, and the index of the last hole manipulated </returns>
-	public virtual (Player, int) MakeMove(int holeIndex) // Template method
+	public virtual void MakeMove(Player p, int holeIndex) // Template method
 	{
-		throw new NotImplementedException();
-	}
+        // check if move valid make move 
+        if (CheckValidMove(CurrentPlayer, holeIndex))
+            PerformMove(CurrentPlayer, holeIndex);
+    }
 	
-	public virtual int PerformMove(Player player, int holeIndex)
+	public virtual void PerformMove(Player player, int holeIndex)
 	{
-		throw new NotImplementedException();
-	}
+		// make the move && change current player
+		var hCycle = _board.GetHolesCycle(holeIndex);
+        
+		int stonesToUse = _board.GetHole(holeIndex);
+        while (hCycle.MoveNext() && stonesToUse > 0)
+        {
+			if (_board.IsMainHoleOf(otherPlayer(player).PlayerNumber, hCycle.Current._holeIndex))
+				continue;
+			hCycle.Current.StoneCount += 1;
+			--stonesToUse;
+			if (stonesToUse == 0)
+				CurrentPlayer = NextPlayer(player, hCycle.Current._holeIndex);
+        }
+    }
 
 	public abstract float DetermineScore(Player p);
 }
