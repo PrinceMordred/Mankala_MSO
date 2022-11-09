@@ -7,7 +7,7 @@
             ConsoleColor consoleColor,
             int lastSelectedHole)
         {
-            PlayerNumber = PlayerNumber;
+            PlayerNumber = playerNumber;
             PlayerName = playerName;
             ConsoleColor = consoleColor;
             LastSelectedHole = lastSelectedHole;

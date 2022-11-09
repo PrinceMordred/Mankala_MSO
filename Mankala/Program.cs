@@ -73,17 +73,13 @@ bool lowerPlayerIsMakingAMove() => gameLogic.CurrentPlayer.PlayerNumber == 1;
 Player? winner;
 while ((winner = gameLogic.GetWinner()) == null) // game loop
 {
-	// interpret current state
-	// ref var currentHoleIndex = ref playerOneIsUp ? ref playerOne.LastSelectedHole : ref selectedHoleP2;
-	// var rangeOfHolesOfCurrentPlayer = playerOneIsUp ? board.RangeOfHolesP1 : board.RangeOfHolesP2;
-	// var otherPlayerIndex = playerOneIsUp ? 2 : 1;
-	
+
 	// Ask the player to make a move
 	Console.Clear();
 	promptSelectHole(GetCurrentSelectedHole(), board.GetRangeOfHoles(gameLogic.CurrentPlayer.PlayerNumber));
 	
-	// Make instructed move
-	gameLogic.MakeMove(GetCurrentSelectedHole());
+	// Make instructed move 
+	gameLogic.MakeMove(gameLogic.CurrentPlayer, GetCurrentSelectedHole());
 }
 
 Console.WriteLine("\n\nWe have a winner!");

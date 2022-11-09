@@ -17,7 +17,10 @@ public abstract class GameLogic : IObservable<string>
 	// factory methods
 	protected virtual bool CheckValidMove(Player player, int selectedHole)
 	{
-		throw new NotImplementedException();
+		if (_board.GetHole(selectedHole) > 0)
+			return true;
+		return false;
+		
 	}
 	public abstract Player? GetWinner();
 	protected abstract Player NextPlayer(Player player, int lastHoleIndex);
@@ -26,21 +29,38 @@ public abstract class GameLogic : IObservable<string>
 	{
 		_board      = board;
 		_playerList = pList;
+		CurrentPlayer = GetP1;
 	}
 
 	/// <summary> Performs the move and all logics related </summary>
 	/// <returns> The player who is up next, and the index of the last hole manipulated </returns>
-	public (Player, int) MakeMove(int holeIndex) // Template method
+	public void MakeMove(Player p, int holeIndex) // Template method
 	{
 		NotifyObserversSuccess($"{CurrentPlayer.PlayerName} chose to spread the stones in hole {holeIndex}");
 		
-		throw new NotImplementedException();
+		// check if move valid make move 
+		if (CheckValidMove(CurrentPlayer, holeIndex))
+			PerformMove(CurrentPlayer, holeIndex);
 	}
 	
-	public int PerformMove(Player player, int holeIndex)
+	public void PerformMove(Player player, int holeIndex)
 	{
-		throw new NotImplementedException();
-	}
+		// make the move && change current player
+		var hCycle = _board.GetHolesCycle(holeIndex);
+        
+		int stonesToUse = _board.GetHole(holeIndex);
+        while (hCycle.MoveNext() && stonesToUse > 0)
+        {
+	        var hCycleCurrent = hCycle.Current;
+	        
+	        if (_board.IsMainHoleOf(otherPlayer(player).PlayerNumber, hCycleCurrent._holeIndex))
+				continue;
+			hCycleCurrent.StoneCount += 1;
+			--stonesToUse;
+			if (stonesToUse == 0)
+				CurrentPlayer = NextPlayer(player, hCycleCurrent._holeIndex);
+        }
+    }
 
 	public abstract float DetermineScore(Player p);
 	
