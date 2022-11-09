@@ -48,17 +48,17 @@ These are your options:
 #endregion
 
 // remember the state of who (and how) selects the next hole to make a move
-var playerOneIsOn = true;
+var playerOneIsUp = true;
 int selectedHoleP1 = 0;
-int selectedHoleP2 = board.IndexOfBaseHoleP2 - 1;
+int selectedHoleP2 = board.IndexOfNormalHoleP2 - 1;
 
 Player? winner;
 while ((winner = gameLogic.GetWinner()) == null) // game loop
 {
 	// interpret current state
-	ref var currentHoleIndex = ref playerOneIsOn ? ref selectedHoleP1 : ref selectedHoleP2;
-	var rangeOfHolesOfCurrentPlayer = playerOneIsOn ? board.RangeOfHolesP1 : board.RangeOfHolesP2;
-	var otherPlayerIndex = playerOneIsOn ? 2 : 1;
+	ref var currentHoleIndex = ref playerOneIsUp ? ref selectedHoleP1 : ref selectedHoleP2;
+	var rangeOfHolesOfCurrentPlayer = playerOneIsUp ? board.RangeOfHolesP1 : board.RangeOfHolesP2;
+	var otherPlayerIndex = playerOneIsUp ? 2 : 1;
 	
 	// Ask the player to make a move
 	Console.Clear();
@@ -66,7 +66,7 @@ while ((winner = gameLogic.GetWinner()) == null) // game loop
 	
 	// Make instructed move
 	var nextPlayer = gameLogic.MakeMove(currentHoleIndex);
-	playerOneIsOn = nextPlayer.PlayerNumber == 1;
+	playerOneIsUp = nextPlayer.PlayerNumber == 1;
 }
 
 Console.WriteLine("\n\nWe have a winner!");
@@ -77,7 +77,7 @@ Console.Write($"{winner} won with a score of {winner.Score}");
 void promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
 {
 	// Print the board and the selection arrow to the console.
-	var (holesOffset, holeWidth, arrowY) = printBoardAndSelectionArrow(!playerOneIsOn);
+	var (holesOffset, holeWidth, arrowY) = printBoardAndSelectionArrow(!playerOneIsUp);
 	var currentArrowX = 0; // Note that the selection arrow is printed on x=0 by default
 	
 	moveSelectionArrow(currentHoleIndex); // Move the arrow to the standard/last known selected hole
@@ -94,9 +94,9 @@ void promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
 		
 		switch (inputKey)
 		{
-			case ConsoleKey.RightArrow: currentHoleIndex += playerOneIsOn ? 1 : -1; // the ternary compensates for the fact that the upper holes go from right to left
+			case ConsoleKey.RightArrow: currentHoleIndex += playerOneIsUp ? 1 : -1; // the ternary compensates for the fact that the upper holes go from right to left
 				break;
-			case ConsoleKey.LeftArrow:  currentHoleIndex += playerOneIsOn ? -1 : 1; // the ternary compensates for the fact that the upper holes go from right to left
+			case ConsoleKey.LeftArrow:  currentHoleIndex += playerOneIsUp ? -1 : 1; // the ternary compensates for the fact that the upper holes go from right to left
 				break;
 			default: // wrong keypresses should be ignored
 				continue;
@@ -108,11 +108,11 @@ void promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
 		moveSelectionArrow(currentHoleIndex);
 	}
 
-	// Literally moves the arrow in the console to the right hole
+	// Literally moves the arrow in the console to the correct hole
 	void moveSelectionArrow(int currentHoleIndex)
 	{
 		// Make the arrow go form right to left when selecting upper row
-		var nthHoleFromLeft = playerOneIsOn ? currentHoleIndex : (holeIndexes.End.Value - 1) - currentHoleIndex; 
+		var nthHoleFromLeft = playerOneIsUp ? currentHoleIndex : (holeIndexes.End.Value - 1) - currentHoleIndex; 
 		// Determine (based on the above trick) the new offset of the arrow
 		var newArrowX = holesOffset + nthHoleFromLeft * holeWidth + holeWidth - 2; // offset + x of hole + right side of hole
 		

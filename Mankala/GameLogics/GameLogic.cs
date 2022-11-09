@@ -4,9 +4,9 @@ public abstract class GameLogic
 {
 	protected Board _board;
 
-	protected int numNormalHolesPerPlayer;
-	protected int numMainHolesPerPlayer;
-	protected int numStartStones;
+	protected int _numNormalHolesPerPlayer;
+	protected int _numMainHolesPerPlayer;
+	protected int _numStartStones;
 	
 	// factory methods
 	protected abstract bool    CheckValidMove(int selectedHole);
@@ -35,8 +35,8 @@ public abstract class GameLogic
 	{
 		int finalHoleIndex = 0;
 		// pick up all stones out of a hole
-		byte stonesToSpread = _board.GetHoles[holeIndex];
-		_board.GetHoles[holeIndex] = 0;
+		byte stonesToSpread = _board.GetHolesCopy[holeIndex];
+		_board.GetHolesCopy[holeIndex] = 0;
 		Board.HoleKind oppositeHoleIndex = otherPlayerIndex == 1 ? Board.HoleKind.MainHoleP1 : Board.HoleKind.MainHoleP2;
 		
 		// spread stones
@@ -50,7 +50,7 @@ public abstract class GameLogic
 				continue;
 			else
 			{
-				_board.GetHoles[holeCycle.Current.StoneCount]++;
+				_board.GetHolesCopy[holeCycle.Current.StoneCount]++;
 				stonesToSpread--;
 				if (stonesToSpread == 0)
 					finalHoleIndex = holeCycle.Current.StoneCount;

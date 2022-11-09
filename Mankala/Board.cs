@@ -6,17 +6,19 @@ public class Board
 {
 	protected readonly byte _numStartStones;
 	protected readonly byte _numNormalHolesPerPlayer;
+	// TODO: numOfMainHolesPerPlayer
 	
-	protected byte[] _holes; // n holes for p1, 1 base hole for p1, n holes for p2, 1 base hole for p2
-	public byte[] GetHoles => _holes;
+	protected byte[] _holes; // n holes for p1, 1 main hole for p1, n holes for p2, 1 main hole for p2
+	public byte[] GetHolesCopy => _holes;
 	
-	public int   IndexOfBaseNumNormalHoleP1 => _numNormalHolesPerPlayer;
-	public int   IndexOfBaseHoleP2 => _holes.Length - 1;
-	public Range RangeOfHolesP1    => new(0, IndexOfBaseNumNormalHoleP1);
-	public Range RangeOfHolesP2    => new(IndexOfBaseNumNormalHoleP1 + 1, IndexOfBaseHoleP2);
+	public int   IndexOfNormalHoleP1 => _numNormalHolesPerPlayer;
+	public int   IndexOfNormalHoleP2 => _holes.Length - 1;
 	
-	public byte   GetBaseP1  => _holes[IndexOfBaseNumNormalHoleP1];
-	public byte   GetBaseP2  => _holes[IndexOfBaseHoleP2];
+	public Range RangeOfHolesP1 => new(0, IndexOfNormalHoleP1);
+	public Range RangeOfHolesP2 => new(IndexOfNormalHoleP1 + 1, IndexOfNormalHoleP2);
+	
+	public byte   GetBaseP1  => _holes[IndexOfNormalHoleP1];
+	public byte   GetBaseP2  => _holes[IndexOfNormalHoleP2];
 	public byte[] GetHolesP1 => _holes[RangeOfHolesP1];
 	public byte[] GetHolesP2 => _holes[RangeOfHolesP2];
 

@@ -8,7 +8,7 @@ public class MankalaGameLogic : GameLogic
 
 	protected override bool CheckValidMove(int selectedHole)
 	{
-		return _board.GetHoles[selectedHole] != 0;
+		return _board.GetHolesCopy[selectedHole] != 0;
 	}
 
 	public override Player? GetWinner()
