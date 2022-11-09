@@ -9,7 +9,7 @@ public class Board : IObservable<string>
 	// TODO: numOfMainHolesPerPlayer
 	
 	protected byte[] _holes; // n holes for p1, 1 main hole for p1, n holes for p2, 1 main hole for p2
-	public byte[] GetHolesCopy => _holes;
+	//public byte[] GetHolesCopy => _holes;
 
 	public int GetMainHoleIndex(int playerNumber) => playerNumber is 1
 		? _numNormalHolesPerPlayer : _holes.Length - 1;
@@ -23,6 +23,8 @@ public class Board : IObservable<string>
     public byte   GetMainHole(int playerNumber) => _holes[GetMainHoleIndex(playerNumber)];
     public byte[] GetHoles(int playerNumber)    => _holes[GetRangeOfHoles(playerNumber)];
 
+    
+    
     public bool IsMainHoleOf(int player, int i) => player switch
 	{
 		1 => i == _numNormalHolesPerPlayer,
@@ -100,8 +102,6 @@ public class Board : IObservable<string>
 	{
 		private readonly int _holeIndex;
 		private readonly Board _board;
-		
-		public readonly HoleKind HoleKind;
 
 		public byte StoneCount
 		{
@@ -116,14 +116,10 @@ public class Board : IObservable<string>
 		internal HoleReference(int holeIndex, Board board)
 		{
 			_holeIndex  = holeIndex;
-			HoleKind    = holeKind;
 			_board		= board;
 		}
 	}
 
-	public enum HoleKind { MainHoleP1, MainHoleP2, NormalHoleP1, NormalHoleP2 }
-
-	
 	// Observer pattern
 	private List<IObserver<string>> _observers = new();
 	protected void NotifyObserversSuccess(string message)
