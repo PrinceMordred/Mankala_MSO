@@ -18,8 +18,11 @@ T prompt<T>(string question, Func<string?, (bool, T)> tryParse,
 	}
 }
 
+ILogger logger = new Logger();
+
 #region Set up board
 var board = promptBoard();
+board.Subscribe(logger);
 Board promptBoard()
 {
 	var stonesPerHole  = prompt("How many stones should every hole have?",
@@ -61,7 +64,7 @@ These are your options:
 ", //TODO: werk deze lijst bij
 	x => (Enum.TryParse(x, out GameLogics gameLogic),
 		SimpleGameLogicFactory.CreateGameLogic(gameLogic, board, players)));
-
+gameLogic.Subscribe(logger);
 #endregion
 
 int GetCurrentSelectedHole() => gameLogic.CurrentPlayer.LastSelectedHole; 
