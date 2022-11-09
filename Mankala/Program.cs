@@ -27,17 +27,6 @@ Board promptBoard()
 	var holesPerPlayer = prompt("How many holes should evey player have?",
 		x => (byte.TryParse(x, out var parsed) && parsed > 0, parsed));
 
-	// byte promptOld(string question)
-	// {
-	// 	Console.Write(question + " > ");
-	// 	if (byte.TryParse(Console.ReadLine(), out byte input))
-	// 		return input;
-	//
-	// 	// If we reach this code, the input was invalid
-	// 	Console.WriteLine("Please enter some valid input. > ");
-	// 	return prompt(question);
-	// }
-
 	return new Board(stonesPerHole, holesPerPlayer);
 }
 #endregion
@@ -51,26 +40,6 @@ Player promptPlayer(int playerNumber)
 	var color = prompt("What color will this player be? (Examples: Red, Blue)",
 		x => (Enum.TryParse<ConsoleColor>(x, out var parsed), parsed),
 		"That's an unknown color to us. Please retry.");
-	// Console.Write($"What will the name be of player {playerNumber}? > ");
-	// var name = Console.ReadLine();
-	// if (string.IsNullOrWhiteSpace(name))
-	// {
-	// 	Console.WriteLine("That's a weird name. Not judging, but please give another name.");
-	// 	return promptPlayer(playerNumber);
-	// }
-
-	// var color = promptConsoleColor();
-	// ConsoleColor promptConsoleColor()
-	// {
-	// 	Console.Write("What color will this player be? > ");
-	// 	if (!Enum.TryParse(Console.ReadLine(), out ConsoleColor color))
-	// 	{
-	// 		Console.WriteLine("That's an unknown color to us. Please retry.");
-	// 		return promptConsoleColor();
-	// 	}
-	//
-	// 	return color;
-	// }
 
 	return new Player(playerNumber, name, color, -1);
 }
@@ -92,26 +61,6 @@ These are your options:
 ", //TODO: werk deze lijst bij
 	x => (Enum.TryParse(x, out GameLogics gameLogic),
 		SimpleGameLogicFactory.CreateGameLogic(gameLogic, board, players)));
-
-// 	GameLogic promptGameLogic()
-// {
-// 	Console.Write(@"What ruleset would you like the game to follow?
-//
-// These are your options:
-// 	- Mankala
-// 	- Wari
-//
-// > "); //TODO: werk deze lijst bij
-//
-// 	var success = Enum.TryParse<GameLogics>(Console.ReadLine(), out var gameLogic);
-// 	Console.Clear();
-//
-// 	if (success) return ;
-// 	
-// 	// If we reach this code, the input was invalid
-// 	Console.WriteLine("Please enter some valid input...");
-// 	return promptGameLogic();
-// }
 
 #endregion
 
