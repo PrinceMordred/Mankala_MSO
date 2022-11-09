@@ -93,7 +93,7 @@ public class Board : IObservable<string>
 	{
         //loops through the holes infinitely
         for (int i = start; true; i = (i + 1) % _holes.Length)
-            yield return new HoleReference(i, );
+            yield return new HoleReference(i, this);
 
     }
 
