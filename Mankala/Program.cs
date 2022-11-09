@@ -4,7 +4,7 @@ using Mankala.GameLogics;
 
 // A generic method which removes a lot of duplicate code for prompting the player for input
 T prompt<T>(string question, Func<string?, (bool, T)> tryParse,
-	string errorMessage = "That's some invalid input. Please try again")
+	string errorMessage = "[ERROR] That's some invalid input. Please try again.")
 {
 	while (true) // while incorrect input
 	{
@@ -25,7 +25,7 @@ Board promptBoard()
 	var stonesPerHole  = prompt("How many stones should every hole have?",
 		x => (byte.TryParse(x, out var parsed), parsed));
 	var holesPerPlayer = prompt("How many holes should evey player have?",
-		x => (byte.TryParse(x, out var parsed), parsed));
+		x => (byte.TryParse(x, out var parsed) && parsed > 0, parsed));
 
 	// byte promptOld(string question)
 	// {
@@ -48,7 +48,7 @@ Player promptPlayer(int playerNumber)
 		x => (!string.IsNullOrWhiteSpace(x), x),
 		"That's a weird name. Not judging, but please give another name.");
 
-	var color = prompt("What color will this player be?",
+	var color = prompt("What color will this player be? (Examples: Red, Blue)",
 		x => (Enum.TryParse<ConsoleColor>(x, out var parsed), parsed),
 		"That's an unknown color to us. Please retry.");
 	// Console.Write($"What will the name be of player {playerNumber}? > ");
@@ -78,6 +78,8 @@ Player promptPlayer(int playerNumber)
 Player[] players = { promptPlayer(1), promptPlayer(2) };
 players[0].LastSelectedHole = 0;
 players[1].LastSelectedHole = board.GetMainHoleIndex(players[1].PlayerNumber) - 1;
+
+Console.Clear();
 
 #region Set up game logics
 
