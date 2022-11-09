@@ -7,7 +7,8 @@ public interface ILogger : IObserver<string>
 
 public class Logger : ILogger, IDisposable
 {
-	private readonly string _logDestination = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+	private const string FileName = "MankalaLog.txt";
+	private readonly string _logDestination = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + '\\' + FileName;
 	private readonly StreamWriter logWriter;
 	
 	public Logger()

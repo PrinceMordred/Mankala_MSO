@@ -58,7 +58,7 @@ public class Board : IObservable<string>
 		// Print
 		printFilledLine();
 		printHolesLine(GetHoles(2).Reverse());
-		printBaseHoleLine(GetMainHole(2), GetMainHole(1));
+		printMainHoleLine(GetMainHole(2), GetMainHole(1));
 		printHolesLine(GetHoles(1));
 		printFilledLine();
 
@@ -76,7 +76,7 @@ public class Board : IObservable<string>
 			sb.AppendLine("##");
 		}
 
-		void printBaseHoleLine(byte holeL, byte holeR)
+		void printMainHoleLine(byte holeL, byte holeR)
 		{
 			sb.Append('#');
 			sb.Append(padHole(holeL));

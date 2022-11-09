@@ -28,7 +28,7 @@ Board promptBoard()
 	var stonesPerHole  = prompt("How many stones should every hole have?",
 		x => (byte.TryParse(x, out var parsed), parsed));
 	var holesPerPlayer = prompt("How many holes should evey player have?",
-		x => (byte.TryParse(x, out var parsed) && parsed > 0, parsed));
+		x => (byte.TryParse(x, out var parsed) && parsed > 1, parsed));
 
 	return new Board(stonesPerHole, holesPerPlayer);
 }
@@ -73,7 +73,6 @@ bool lowerPlayerIsMakingAMove() => gameLogic.CurrentPlayer.PlayerNumber == 1;
 Player? winner;
 while ((winner = gameLogic.GetWinner()) == null) // game loop
 {
-
 	// Ask the player to make a move
 	Console.Clear();
 	promptSelectHole(GetCurrentSelectedHole(), board.GetRangeOfHoles(gameLogic.CurrentPlayer.PlayerNumber));
@@ -81,6 +80,8 @@ while ((winner = gameLogic.GetWinner()) == null) // game loop
 	// Make instructed move 
 	gameLogic.MakeMove(gameLogic.CurrentPlayer, GetCurrentSelectedHole());
 }
+
+printBoardAndSelectionArrow(true);
 
 Console.WriteLine("\n\nWe have a winner!");
 winner.PrintInColor();
