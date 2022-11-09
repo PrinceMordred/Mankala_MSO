@@ -2,7 +2,23 @@
 using Mankala;
 using Mankala.GameLogics;
 
-#region Set Up Board
+// A generic method which removes a lot of duplicate code for prompting the player for input
+T prompt<T>(string question, Func<string?, (bool, T)> checkValidInput,
+	string errorMessage = "That's some invalid input. Please try again")
+{
+	while (true) // while incorrect input
+	{
+		Console.Write(question + " > ");
+		var input = Console.ReadLine();
+		var (success, parsed) = checkValidInput(input);
+		
+		if (success) return parsed;
+		
+		Console.WriteLine(errorMessage);
+	}
+}
+
+#region Set up board
 var board = promptBoard();
 Board promptBoard()
 {
@@ -24,41 +40,6 @@ Board promptBoard()
 
 	return new Board(stonesPerHole, holesPerPlayer);
 }
-#endregion
-
-#region Set up game logics
-
-var gameLogic = prompt(@"What ruleset would you like the game to follow?
-
-These are your options:
-	- Mankala
-	- Wari
-
-> ", //TODO: werk deze lijst bij
-	x => (Enum.TryParse(Console.ReadLine(), out GameLogics gameLogic),
-		SimpleGameFactory.CreateRuleSet(gameLogic, board)));
-
-
-// 	GameLogic promptGameLogic()
-// {
-// 	Console.Write(@"What ruleset would you like the game to follow?
-//
-// These are your options:
-// 	- Mankala
-// 	- Wari
-//
-// > "); //TODO: werk deze lijst bij
-//
-// 	var success = Enum.TryParse<GameLogics>(Console.ReadLine(), out var gameLogic);
-// 	Console.Clear();
-//
-// 	if (success) return ;
-// 	
-// 	// If we reach this code, the input was invalid
-// 	Console.WriteLine("Please enter some valid input...");
-// 	return promptGameLogic();
-// }
-
 #endregion
 
 Player promptPlayer(int playerNumber)
@@ -94,44 +75,62 @@ Player promptPlayer(int playerNumber)
 	return new Player(playerNumber, name, color, null);
 }
 
-T prompt<T>(string question, Func<string?, (bool, T)> checkValidInput,
-	string errorMessage = "That's some invalid input. Please try again")
-{
-	while (true) // while incorrect input
-	{
-		Console.Write(question + " > ");
-		var input = Console.ReadLine();
-		var (success, parsed) = checkValidInput(input);
-		
-		if (success) return parsed;
-		
-		Console.WriteLine(errorMessage);
-	}
-}
+Player[] players = { promptPlayer(1), promptPlayer(2) };
+players[0].LastSelectedHole = 0;
+players[1].LastSelectedHole = board.IndexOfNormalHoleP2 - 1;
 
-var playerOne = promptPlayer(1);
-var playerTwo = promptPlayer(2);
+#region Set up game logics
 
-var playerOneIsUp = true;
+var gameLogic = prompt(@"What ruleset would you like the game to follow?
 
-playerOne.LastSelectedHole = 0;
-playerTwo.LastSelectedHole = board.IndexOfBaseHoleP2 - 1;
+These are your options:
+	- Mankala
+	- Wari
+
+> ", //TODO: werk deze lijst bij
+	x => (Enum.TryParse(Console.ReadLine(), out GameLogics gameLogic),
+		SimpleGameLogicFactory.CreateGameLogic(gameLogic, board, players)));
+
+
+// 	GameLogic promptGameLogic()
+// {
+// 	Console.Write(@"What ruleset would you like the game to follow?
+//
+// These are your options:
+// 	- Mankala
+// 	- Wari
+//
+// > "); //TODO: werk deze lijst bij
+//
+// 	var success = Enum.TryParse<GameLogics>(Console.ReadLine(), out var gameLogic);
+// 	Console.Clear();
+//
+// 	if (success) return ;
+// 	
+// 	// If we reach this code, the input was invalid
+// 	Console.WriteLine("Please enter some valid input...");
+// 	return promptGameLogic();
+// }
+
+#endregion
+
+ref int currentSelectedHole() => ref gameLogic.CurrentPlayer.LastSelectedHole; 
+bool lowerPlayerIsMakingAMove() => gameLogic.CurrentPlayer.PlayerNumber == 1;
 
 Player? winner;
 while ((winner = gameLogic.GetWinner()) == null) // game loop
 {
 	// interpret current state
-	ref var currentHoleIndex = ref playerOneIsUp ? ref selectedHoleP1 : ref selectedHoleP2;
-	var rangeOfHolesOfCurrentPlayer = playerOneIsUp ? board.RangeOfHolesP1 : board.RangeOfHolesP2;
-	var otherPlayerIndex = playerOneIsUp ? 2 : 1;
+	// ref var currentHoleIndex = ref playerOneIsUp ? ref playerOne.LastSelectedHole : ref selectedHoleP2;
+	// var rangeOfHolesOfCurrentPlayer = playerOneIsUp ? board.RangeOfHolesP1 : board.RangeOfHolesP2;
+	// var otherPlayerIndex = playerOneIsUp ? 2 : 1;
 	
 	// Ask the player to make a move
 	Console.Clear();
-	promptSelectHole(ref currentHoleIndex, rangeOfHolesOfCurrentPlayer);
+	promptSelectHole(ref currentSelectedHole(), board.RangeOfHoles(gameLogic.CurrentPlayer));
 	
 	// Make instructed move
-	var nextPlayer = gameLogic.MakeMove(currentHoleIndex);
-	playerOneIsUp = nextPlayer.PlayerNumber == 1;
+	gameLogic.MakeMove(currentSelectedHole());
 }
 
 Console.WriteLine("\n\nWe have a winner!");
@@ -139,10 +138,10 @@ Console.Write($"{winner} won with a score of {gameLogic.GetScore(winner)}");
 
 #region Console interactions
 // Converts selectedHoleOfCurrentPlayer to the new selected hole index
-void promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
+int promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
 {
 	// Print the board and the selection arrow to the console.
-	var (holesOffset, holeWidth, arrowY) = printBoardAndSelectionArrow(!playerOneIsUp);
+	var (holesOffset, holeWidth, arrowY) = printBoardAndSelectionArrow(!lowerPlayerIsMakingAMove());
 	var currentArrowX = 0; // Note that the selection arrow is printed on x=0 by default
 	
 	moveSelectionArrow(currentHoleIndex); // Move the arrow to the standard/last known selected hole
@@ -159,9 +158,9 @@ void promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
 		
 		switch (inputKey)
 		{
-			case ConsoleKey.RightArrow: currentHoleIndex += playerOneIsUp ? 1 : -1; // the ternary compensates for the fact that the upper holes go from right to left
+			case ConsoleKey.RightArrow: currentHoleIndex += lowerPlayerIsMakingAMove() ? 1 : -1; // the ternary compensates for the fact that the upper holes go from right to left
 				break;
-			case ConsoleKey.LeftArrow:  currentHoleIndex += playerOneIsUp ? -1 : 1; // the ternary compensates for the fact that the upper holes go from right to left
+			case ConsoleKey.LeftArrow:  currentHoleIndex += lowerPlayerIsMakingAMove() ? -1 : 1; // the ternary compensates for the fact that the upper holes go from right to left
 				break;
 			default: // wrong keypresses should be ignored
 				continue;
@@ -177,7 +176,7 @@ void promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
 	void moveSelectionArrow(int currentHoleIndex)
 	{
 		// Make the arrow go form right to left when selecting upper row
-		var nthHoleFromLeft = playerOneIsUp ? currentHoleIndex : (holeIndexes.End.Value - 1) - currentHoleIndex; 
+		var nthHoleFromLeft = lowerPlayerIsMakingAMove() ? currentHoleIndex : (holeIndexes.End.Value - 1) - currentHoleIndex; 
 		// Determine (based on the above trick) the new offset of the arrow
 		var newArrowX = holesOffset + nthHoleFromLeft * holeWidth + holeWidth - 2; // offset + x of hole + right side of hole
 		
