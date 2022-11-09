@@ -50,12 +50,14 @@ public abstract class GameLogic
 		int stonesToUse = _board.GetHole(holeIndex);
         while (hCycle.MoveNext() && stonesToUse > 0)
         {
-			if (_board.IsMainHoleOf(otherPlayer(player).PlayerNumber, hCycle.Current._holeIndex))
+	        var hCycleCurrent = hCycle.Current;
+	        
+	        if (_board.IsMainHoleOf(otherPlayer(player).PlayerNumber, hCycleCurrent._holeIndex))
 				continue;
-			hCycle.Current.StoneCount += 1;
+			hCycleCurrent.StoneCount += 1;
 			--stonesToUse;
 			if (stonesToUse == 0)
-				CurrentPlayer = NextPlayer(player, hCycle.Current._holeIndex);
+				CurrentPlayer = NextPlayer(player, hCycleCurrent._holeIndex);
         }
     }
 
