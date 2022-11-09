@@ -1,4 +1,4 @@
-﻿using Mankala.Rulesets;
+﻿using Mankala.GameLogics;
 
 namespace Mankala.Tests;
 
@@ -35,11 +35,17 @@ public class MoveTests
 	}
 
 	[Theory]
-	[InlineData(Ruleset.Mankala)]
-	public void MakeMove_BasedOnExistingRuleSet_MakesCorrectPlayerGoNext(Ruleset rulesetType)
+	[InlineData(GameLogics.GameLogics.Mankala)]
+	public void MakeMove_UsingInlineGameLogic_MakesCorrectPlayerGoNext(GameLogics.GameLogics gameLogic)
 	{
 		// Arrange
-		var ruleset = RulesetSimpleFactory.CreateRuleSet(rulesetType);
+		var board = new Board(6, 4);
+		Player[] players =
+		{
+			new(1, "playerOne", ConsoleColor.Gray, -1),
+			new(2, "playerTwo", ConsoleColor.Gray, -1)
+		};
+		var ruleset = SimpleGameLogicFactory.CreateGameLogic(gameLogic, board, players);
 
 		// Act
 

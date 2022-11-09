@@ -12,10 +12,10 @@ public class BoardTests
 		// Act
 
 		// Assert
-		Assert.Equal(0, board.GetBaseP1);
-		Assert.Equal(0, board.GetBaseP2);
-		Assert.All(board.GetHolesP1, b => Assert.Equal(stonesPerHole, b));
-		Assert.All(board.GetHolesP2, b => Assert.Equal(stonesPerHole, b));
+		Assert.Equal(0, board.GetMainHole(1));
+		Assert.Equal(0, board.GetMainHole(2));
+		Assert.All(board.GetHoles(1), b => Assert.Equal(stonesPerHole, b));
+		Assert.All(board.GetHoles(2), b => Assert.Equal(stonesPerHole, b));
 	}
 	[Theory]
 	[InlineData(1)]	[InlineData(4)]	[InlineData(6)]	[InlineData(50)] [InlineData(0)]
@@ -27,7 +27,7 @@ public class BoardTests
 		// Act
 
 		// Assert
-		Assert.Equal(holesPerPlayer, board.GetHolesP1.Length);
-		Assert.Equal(holesPerPlayer, board.GetHolesP2.Length);
+		Assert.Equal(holesPerPlayer, board.GetHoles(1).Length);
+		Assert.Equal(holesPerPlayer, board.GetHoles(2).Length);
 	}
 }

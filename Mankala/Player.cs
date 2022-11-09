@@ -2,33 +2,35 @@
 {
     public class Player
     {
-        public Player(int PlayerNumber,
-            string PlayerName,
-            ConsoleColor ConsoleColor,
-            int? LastSelectedHole)
+        public Player(int playerNumber,
+            string playerName,
+            ConsoleColor consoleColor,
+            int lastSelectedHole)
         {
-            this.PlayerNumber = PlayerNumber;
-            this.PlayerName = PlayerName;
-            this.ConsoleColor = ConsoleColor;
-            this.LastSelectedHole = LastSelectedHole;
+            PlayerNumber = PlayerNumber;
+            PlayerName = playerName;
+            ConsoleColor = consoleColor;
+            LastSelectedHole = lastSelectedHole;
         }
 
-        public override string ToString()
+        public void PrintInColor()
         {
-            return PlayerName;
+            Console.ForegroundColor = ConsoleColor;
+            Console.Write(PlayerName);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public int PlayerNumber { get; init; }
         public string PlayerName { get; init; }
         public ConsoleColor ConsoleColor { get; init; }
-        public int? LastSelectedHole { get; set; }
+        public int LastSelectedHole { get; set; }
 
-        public void Deconstruct(out int PlayerNumber, out string PlayerName, out ConsoleColor ConsoleColor, out int? LastSelectedHole)
+        public void Deconstruct(out int playerNumber, out string playerName, out ConsoleColor consoleColor, out int? lastSelectedHole)
         {
-            PlayerNumber = this.PlayerNumber;
-            PlayerName = this.PlayerName;
-            ConsoleColor = this.ConsoleColor;
-            LastSelectedHole = this.LastSelectedHole;
+            playerNumber = this.PlayerNumber;
+            playerName = this.PlayerName;
+            consoleColor = this.ConsoleColor;
+            lastSelectedHole = this.LastSelectedHole;
         }
     }
 }

@@ -3,14 +3,14 @@ using Mankala;
 using Mankala.GameLogics;
 
 // A generic method which removes a lot of duplicate code for prompting the player for input
-T prompt<T>(string question, Func<string?, (bool, T)> checkValidInput,
+T prompt<T>(string question, Func<string?, (bool, T)> tryParse,
 	string errorMessage = "That's some invalid input. Please try again")
 {
 	while (true) // while incorrect input
 	{
 		Console.Write(question + " > ");
 		var input = Console.ReadLine();
-		var (success, parsed) = checkValidInput(input);
+		var (success, parsed) = tryParse(input);
 		
 		if (success) return parsed;
 		
@@ -45,7 +45,7 @@ Board promptBoard()
 Player promptPlayer(int playerNumber)
 {
 	var name = prompt($"What will the name be of player {playerNumber}?",
-		x => (string.IsNullOrWhiteSpace(x), x),
+		x => (!string.IsNullOrWhiteSpace(x), x),
 		"That's a weird name. Not judging, but please give another name.");
 
 	var color = prompt("What color will this player be?",
@@ -72,12 +72,12 @@ Player promptPlayer(int playerNumber)
 	// 	return color;
 	// }
 
-	return new Player(playerNumber, name, color, null);
+	return new Player(playerNumber, name, color, -1);
 }
 
 Player[] players = { promptPlayer(1), promptPlayer(2) };
 players[0].LastSelectedHole = 0;
-players[1].LastSelectedHole = board.IndexOfNormalHoleP2 - 1;
+players[1].LastSelectedHole = board.GetMainHoleIndex(players[1].PlayerNumber) - 1;
 
 #region Set up game logics
 
@@ -87,10 +87,9 @@ These are your options:
 	- Mankala
 	- Wari
 
-> ", //TODO: werk deze lijst bij
-	x => (Enum.TryParse(Console.ReadLine(), out GameLogics gameLogic),
+", //TODO: werk deze lijst bij
+	x => (Enum.TryParse(x, out GameLogics gameLogic),
 		SimpleGameLogicFactory.CreateGameLogic(gameLogic, board, players)));
-
 
 // 	GameLogic promptGameLogic()
 // {
@@ -114,7 +113,7 @@ These are your options:
 
 #endregion
 
-ref int currentSelectedHole() => ref gameLogic.CurrentPlayer.LastSelectedHole; 
+int GetCurrentSelectedHole() => gameLogic.CurrentPlayer.LastSelectedHole; 
 bool lowerPlayerIsMakingAMove() => gameLogic.CurrentPlayer.PlayerNumber == 1;
 
 Player? winner;
@@ -127,18 +126,19 @@ while ((winner = gameLogic.GetWinner()) == null) // game loop
 	
 	// Ask the player to make a move
 	Console.Clear();
-	promptSelectHole(ref currentSelectedHole(), board.RangeOfHoles(gameLogic.CurrentPlayer));
+	promptSelectHole(GetCurrentSelectedHole(), board.GetRangeOfHoles(gameLogic.CurrentPlayer.PlayerNumber));
 	
 	// Make instructed move
-	gameLogic.MakeMove(currentSelectedHole());
+	gameLogic.MakeMove(GetCurrentSelectedHole());
 }
 
 Console.WriteLine("\n\nWe have a winner!");
-Console.Write($"{winner} won with a score of {gameLogic.GetScore(winner)}");
+winner.PrintInColor();
+Console.Write($" won with a score of {gameLogic.DetermineScore(winner)}");
 
 #region Console interactions
 // Converts selectedHoleOfCurrentPlayer to the new selected hole index
-int promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
+void promptSelectHole(int currentHoleIndex, Range holeIndexes)
 {
 	// Print the board and the selection arrow to the console.
 	var (holesOffset, holeWidth, arrowY) = printBoardAndSelectionArrow(!lowerPlayerIsMakingAMove());
@@ -170,6 +170,8 @@ int promptSelectHole(ref int currentHoleIndex, Range holeIndexes)
 		
 		// Move the arrow to the new selected hole
 		moveSelectionArrow(currentHoleIndex);
+
+		gameLogic.CurrentPlayer.LastSelectedHole = currentHoleIndex;
 	}
 
 	// Literally moves the arrow in the console to the correct hole

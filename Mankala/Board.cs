@@ -10,20 +10,18 @@ public class Board
 	
 	protected byte[] _holes; // n holes for p1, 1 main hole for p1, n holes for p2, 1 main hole for p2
 	public byte[] GetHolesCopy => _holes;
-	
-    public int GetMainHoleIndex(Player player) => player.PlayerNumber==1 ? _numNormalHolesPerPlayer : _holes.Length - 1;
 
-
-    public Range RangeOfHoles(Player p) => p.PlayerNumber switch
+	public int GetMainHoleIndex(int playerNumber) => playerNumber is 1
+		? _numNormalHolesPerPlayer : _holes.Length - 1;
+    
+    public Range GetRangeOfHoles(int playerNumber) => playerNumber switch
     {
-        1 => new (0, GetMainHoleIndex(p)),
-        2 => new (GetMainHoleIndex(p) + 1, _holes.Length - 1),
-        _ => throw new ArgumentOutOfRangeException(nameof(p), p, "Player number must be 1 or 2")
+        1 => new Range(0, GetMainHoleIndex(playerNumber)),
+        2 => new Range(GetMainHoleIndex(playerNumber) + 1, _holes.Length - 1),
+        _ => throw new ArgumentOutOfRangeException(nameof(playerNumber), playerNumber, "Player number must be 1 or 2")
     };
-
-    public byte   GetBaseP1  => _holes[_numNormalHolesPerPlayer];
-	public byte   GetBaseP2  => _holes[_holes.Length - 1];
-	public byte[] GetHoles(Player p) => _holes[RangeOfHoles(p)];
+    public byte   GetMainHole(int playerNumber)  => _holes[GetMainHoleIndex(playerNumber)];
+	public byte[] GetHoles(int playerNumber) => _holes[GetRangeOfHoles(playerNumber)];
 
     public bool IsMainHoleOf(int player, int i) => player switch
 	{
@@ -57,9 +55,9 @@ public class Board
 
 		// Print
 		printFilledLine();
-		printHolesLine(GetHoles(p2).Reverse()); //TODO
-		printBaseHoleLine(GetBaseP2, GetBaseP1);
-		printHolesLine(GetHoles(P1)); //TODO
+		printHolesLine(GetHoles(2).Reverse());
+		printBaseHoleLine(GetMainHole(2), GetMainHole(1));
+		printHolesLine(GetHoles(1));
 		printFilledLine();
 
 		void printFilledLine()

@@ -2,7 +2,7 @@
 
 public class MankalaGameLogic : GameLogic
 {
-	public MankalaGameLogic(Board board, Player player) : base(board, player)
+	public MankalaGameLogic(Board board, Player[] players) : base(board, players)
 	{
 	}
 
@@ -19,6 +19,11 @@ public class MankalaGameLogic : GameLogic
 
 	protected override Player NextPlayer(Player player, int lastHoleIndex)
 	{
-        //TODO
-    }
+		throw new NotImplementedException();
+	}
+
+	public override float DetermineScore(Player p)
+	{
+		throw new NotImplementedException();
+	}
 }
