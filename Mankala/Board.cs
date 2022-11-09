@@ -16,8 +16,8 @@ public class Board
     
     public Range GetRangeOfHoles(int playerNumber) => playerNumber switch
     {
-        1 => new Range(0, GetMainHoleIndex(playerNumber)),
-        2 => new Range(GetMainHoleIndex(playerNumber) + 1, _holes.Length - 1),
+        1 => new Range(0, GetMainHoleIndex(1)),
+        2 => new Range(GetMainHoleIndex(1) + 1, _holes.Length - 1),
         _ => throw new ArgumentOutOfRangeException(nameof(playerNumber), playerNumber, "Player number must be 1 or 2")
     };
     public byte   GetMainHole(int playerNumber)  => _holes[GetMainHoleIndex(playerNumber)];
