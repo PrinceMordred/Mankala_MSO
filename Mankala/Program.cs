@@ -27,10 +27,12 @@ Board promptBoard()
 {
 	var stonesPerHole  = prompt("How many stones should every hole have?",
 		x => (byte.TryParse(x, out var parsed) && parsed > 0 , parsed));
-	var holesPerPlayer = prompt("How many holes should evey player have?",
+	var normalHolesPerPlayer = prompt("How many normal holes should evey player have?",
 		x => (byte.TryParse(x, out var parsed) && parsed > 1, parsed));
-
-	return new Board(stonesPerHole, holesPerPlayer);
+	var mainHolesPerPlayer = prompt("How many main (home) holes should evey player have?",
+		x => (byte.TryParse(x, out var parsed) && parsed > 0, parsed));
+	
+	return new Board(stonesPerHole, normalHolesPerPlayer, mainHolesPerPlayer);
 }
 #endregion
 
@@ -73,6 +75,8 @@ bool lowerPlayerIsMakingAMove() => gameLogic.CurrentPlayer.PlayerNumber == 1;
 Player? winner;
 while ((winner = gameLogic.GetWinner()) == null) // game loop
 {
+	throw new Exception("The this code possibly does not cope with multiple mainHoles");
+	
 	// Ask the player to make a move
 	Console.Clear();
 	promptSelectHole(GetCurrentSelectedHole(), board.GetRangeOfHoles(gameLogic.CurrentPlayer.PlayerNumber));

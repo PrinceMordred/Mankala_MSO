@@ -4,10 +4,11 @@ public class BoardTests
 {
 	[Theory]
 	[InlineData(1)]	[InlineData(4)]	[InlineData(6)]	[InlineData(50)] [InlineData(0)]
-	public void InitialBoard_WithSpecifiedStoneCount_ShouldContainCorrectNumberOfStones(byte stonesPerHole, byte holesPerPlayer = 6)
+	public void InitialBoard_WithSpecifiedStoneCount_ShouldContainCorrectNumberOfStones(byte stonesPerHole, byte holesPerPlayer = 6, byte numMainHolesPerPlayer = 1)
 	{
+		throw new Exception("All tests in BoardTests do not take numMainHolesPerPlayer in account");
 		// Arrange
-		var board = new Board(stonesPerHole, holesPerPlayer);
+		var board = new Board(stonesPerHole, holesPerPlayer, numMainHolesPerPlayer);
 
 		// Act
 		// (board should have initialized itself)
@@ -20,10 +21,11 @@ public class BoardTests
 	}
 	[Theory]
 	[InlineData(1)]	[InlineData(4)]	[InlineData(6)]	[InlineData(50)] [InlineData(0)]
-	public void InitialBoard_WithSpecifiedHoleCount_ShouldContainCorrectNumberOfHoles(byte holesPerPlayer, byte stonesPerHole = 4)
+	public void InitialBoard_WithSpecifiedHoleCount_ShouldContainCorrectNumberOfHoles(byte holesPerPlayer, byte stonesPerHole = 4, byte numMainHolesPerPlayer = 1)
 	{
+		throw new Exception("All tests in BoardTests do not take numMainHolesPerPlayer in account");
 		// Arrange
-		var board = new Board(stonesPerHole, holesPerPlayer);
+		var board = new Board(stonesPerHole, holesPerPlayer, numMainHolesPerPlayer);
 
 		// Act
 		// (board should have initialized itself)
@@ -36,13 +38,15 @@ public class BoardTests
 	[Fact]
 	public void GetHolesCycle_ImmutablyAndInfinitelyReturnsAllHoles()
 	{
+		throw new Exception("All tests in BoardTests do not take numMainHolesPerPlayer in account");
 		// Arrange
 		const byte numStartStones = 4;
 		const byte numNormalHolesPerPlayer = 6;
+		const byte numMainHolesPerPlayer = 1;
 		const int testCycles = 4;
 		var stonesPerCycle = numNormalHolesPerPlayer * 2 + 2; //TODO: 2 should be replaced with numOfMainHolesPerPlayer
 		
-		Board board = new(numStartStones, numNormalHolesPerPlayer);
+		Board board = new(numStartStones, numNormalHolesPerPlayer, numMainHolesPerPlayer);
 
 		var expectedStoneCounts = new List<byte>();
 		for (var i = 0; i < 2; i++)
@@ -69,13 +73,14 @@ public class BoardTests
 	}
 
 	[Theory]
-	[InlineData(1)] [InlineData(2)]
-	public void IsMainHoleOf_WhenAskedForInlinePlayer_ReturnsCorrectBool(int playerNumber)
+	[InlineData(1, 1)] [InlineData(2, 1)]
+	public void IsMainHoleOf_WhenAskedForInlinePlayer_ReturnsCorrectBool(int playerNumber, byte numMainHolesPerPlayer)
 	{
+		throw new Exception("All tests in BoardTests do not take numMainHolesPerPlayer in account");
 		// Arrange
-		Board board = new(4, 6);
+		Board board = new(4, 6, numMainHolesPerPlayer);
 		var correctMainHoleIndex = board.GetMainHoleIndex(playerNumber);
-		var incorrectMainHoleIndex = Math.Max(correctMainHoleIndex - 1, 0);
+		var incorrectMainHoleIndex = Math.Max(correctMainHoleIndex - 1, 0); //TODO: -1 works fine for 1 main hole, but more will not work this way
 
 		// Act
 		var resultCorrect = board.IsMainHoleOf(playerNumber, correctMainHoleIndex);

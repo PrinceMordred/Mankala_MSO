@@ -39,7 +39,7 @@ public class MoveTests
 	public void MakeMove_UsingInlineGameLogic_MakesCorrectPlayerGoNext(GameLogics.GameLogics gameLogic)
 	{
 		// Arrange
-		var board = new Board(6, 4);
+		var board = new Board(6, 4, 1);
 		Player[] players =
 		{
 			new(1, "playerOne", ConsoleColor.Gray, -1),
