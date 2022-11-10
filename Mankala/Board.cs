@@ -6,10 +6,10 @@ public class Board : IObservable<string>
 {
 	protected readonly byte _numStartStones;
 	protected readonly byte _numNormalHolesPerPlayer;
-	// TODO: numOfMainHolesPerPlayer
+	// TODO: numOfMainHolesPerPlayer?
 	
 	protected byte[] _holes; // n holes for p1, 1 main hole for p1, n holes for p2, 1 main hole for p2
-	public byte[] GetHolesCopy => _holes;
+	//public byte[] GetHolesCopy => _holes;
     public byte GetHole(int index) => _holes[index];
     public int GetMainHoleIndex(int playerNumber) => playerNumber is 1
 		? _numNormalHolesPerPlayer : _holes.Length - 1;
@@ -23,8 +23,6 @@ public class Board : IObservable<string>
     public byte   GetMainHole(int playerNumber) => _holes[GetMainHoleIndex(playerNumber)];
     public byte[] GetHoles(int playerNumber)    => _holes[GetRangeOfHoles(playerNumber)];
 
-    
-    
     public bool IsMainHoleOf(int player, int i) => player switch
 	{
 		1 => i == _numNormalHolesPerPlayer,
@@ -32,6 +30,7 @@ public class Board : IObservable<string>
 		_ => throw new ArgumentOutOfRangeException(
 			"A player was referenced with an incorrect index, which should be 1 or 2: " + player.ToString())
 	};
+    
 
 	public Board(byte numStartStones, byte numNormalHolesPerPlayer)
 	{
@@ -40,7 +39,7 @@ public class Board : IObservable<string>
 		InitializeBoard();
 	}
 
-	protected void InitializeBoard()
+	private void InitializeBoard()
 	{
 		_holes = new byte[2 + _numNormalHolesPerPlayer * 2]; // 2 base-holes and every player hole
 		Array.Fill(_holes, _numStartStones, 0,                   _numNormalHolesPerPlayer);
@@ -91,16 +90,20 @@ public class Board : IObservable<string>
 	}
 
 	/// <summary> Infinitely loops through the holes </summary>
-	public IEnumerator<HoleReference> GetHolesCycle(int start)
+	public IEnumerator<HoleReference> GetHolesCycle(int startFromIndex)
 	{
         //loops through the holes infinitely
-        for (int i = start; true; i = (i + 1) % _holes.Length)
-            yield return new HoleReference(i, this);
-    }
+        while (true)
+        {
+	        yield return new HoleReference(startFromIndex, this);
+	        startFromIndex = (startFromIndex + 1) % _holes.Length;
+        }
+        // ReSharper disable once IteratorNeverReturns
+	}
 
     /// <summary> Aims to wrap a reference to a hole (which is a value type),
     /// because a tuple with a ref byte is not valid code in .NET 6 </summary>
-    public readonly struct HoleReference
+    public readonly struct HoleReference // This class is nested in board so that it may access _holes
 	{
 		public readonly int HoleIndex;
 		private readonly Board _board;
@@ -123,11 +126,11 @@ public class Board : IObservable<string>
 		internal HoleReference(int holeIndex, Board board)
 		{
 			HoleIndex  = holeIndex;
-			_board		= board;
+			_board	   = board;
 		}
 	}
 
-	// Observer pattern
+	#region Observer pattern
 	private List<IObserver<string>> _observers = new();
 	protected void NotifyObserversSuccess(string message)
 	{
@@ -142,6 +145,7 @@ public class Board : IObservable<string>
 	public IDisposable Subscribe(IObserver<string> observer)
 	{
 		_observers.Add(observer);
-		return null; // No unsubscribing :)
+		return null!; // No unsubscribing :)
 	}
+	#endregion Observer pattern
 }
