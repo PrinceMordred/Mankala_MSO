@@ -6,7 +6,7 @@ public class Board : IObservable<string>
 {
 	protected readonly byte _numStartStones;
 	protected readonly byte _numNormalHolesPerPlayer;
-	// TODO: numOfMainHolesPerPlayer?
+	protected readonly byte _numOfMainHolesPerPlayer; //TODO: was this nessecary?
 	
 	protected byte[] _holes; // n holes for p1, 1 main hole for p1, n holes for p2, 1 main hole for p2
 	//public byte[] GetHolesCopy => _holes;
