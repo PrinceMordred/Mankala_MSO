@@ -33,12 +33,11 @@ public abstract class GameLogic : IObservable<string>
 		
 		if (!CheckValidMove(CurrentPlayer, holeIndex)) return;
 		var lastHoleAffected = PerformMove(CurrentPlayer, holeIndex);
-		
 		CurrentPlayer = NextPlayer(p, lastHoleAffected);
 	}
 	
 	/// <returns> The index of the hole in which the last stone was spread </returns>
-	public int PerformMove(Player player, int holeIndex)
+	public virtual int PerformMove(Player player, int holeIndex)
 	{
 		// make the move && change current player
 		var holesCycle = _board.GetHolesCycle(holeIndex);
