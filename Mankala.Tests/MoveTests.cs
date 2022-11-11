@@ -5,6 +5,8 @@ namespace Mankala.Tests;
 public class MoveTests
 {
 	// Global variables, which are instantiated on every call to reset test-data 
+	const int defaultNumStartStones = 4;
+	const int defaultNumNormalHolesPerPlayer = 6;
 	private Board defaultBoard => new Board(4, 6);
 	private Player[] defaultPlayers => new []
 	{
@@ -91,5 +93,73 @@ public class MoveTests
 		// Assert
 		Assert.Equal(otherPlayerShouldBeNext, gameLogic.CurrentPlayer.PlayerNumber != 1);
 	}
-    
+	
+	[Theory]
+	[InlineData(GameLogicTypes.Mankala)]
+	[InlineData(GameLogicTypes.Wari)]
+	public void MakeMove_AfterMove_TotalNumberOfStonesDidNotChange(GameLogicTypes gameLogicType)
+	{
+		// Arrange
+		Board     b         = defaultBoard;
+		Player[]  ps        = defaultPlayers;
+		GameLogic gameLogic = SimpleGameLogicFactory.CreateGameLogic(gameLogicType, b, ps);
+
+		var initialStoneCount = countStoneCount();
+		Assert.Equal(initialStoneCount, countStoneCount());
+			// Tests whether CountStoneCount does not manipulate test data
+
+		// Act
+		gameLogic.MakeMove(0);
+		gameLogic.MakeMove(1);
+		gameLogic.MakeMove(2);
+		gameLogic.MakeMove(4);
+
+		// Assert
+		Assert.Equal(defaultNumNormalHolesPerPlayer * 2 * defaultNumStartStones, countStoneCount());
+			// Tests whether the CountStoneCount works like intended
+		
+		Assert.Equal(initialStoneCount, countStoneCount());
+
+		int countStoneCount()
+		{
+			var cycle = b.GetHolesCycle(0);
+			int count = 0;
+
+			for (int i = 0; i <= b.GetMainHoleIndex(2); i++)
+			{
+				cycle.MoveNext();
+				count += cycle.Current.StoneCount;
+			}
+
+			return count;
+		}
+	}
+	
+	[Theory]
+	[InlineData(GameLogicTypes.Mankala, 5)]
+	[InlineData(GameLogicTypes.Wari, 5)]
+	public void MakeMove_AfterEveryMove_MainHoleStoneCountsDontDecrease(GameLogicTypes gameLogicType, int iterations)
+	{
+		// Arrange
+		Board     b         = defaultBoard;
+		Player[]  ps        = defaultPlayers;
+		GameLogic gameLogic = SimpleGameLogicFactory.CreateGameLogic(gameLogicType, b, ps);
+
+		byte[,] stoneCountHistory = new byte[iterations, 2];
+
+		// Act
+		for (int i = 0; i < iterations; i++)
+		{
+			gameLogic.MakeMove(i);
+			stoneCountHistory[i, 0] = b.GetMainHole(1);
+			stoneCountHistory[i, 1] = b.GetMainHole(2);
+		}
+
+		// Assert
+		for (int i = 1; i < iterations; i++)
+		{
+			Assert.True(stoneCountHistory[i, 0] >= stoneCountHistory[i-1, 0]);
+			Assert.True(stoneCountHistory[i, 1] >= stoneCountHistory[i-1, 1]);
+		}
+	}
 }
