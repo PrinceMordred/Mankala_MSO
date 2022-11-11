@@ -89,7 +89,7 @@ while ((winner = gameLogic.GetWinner()) == null) // game loop
 	promptSelectHole(GetCurrentSelectedHole(), board.GetRangeOfHoles(gameLogic.CurrentPlayer.PlayerNumber));
 	
 	// Make instructed move 
-	gameLogic.MakeMove(gameLogic.CurrentPlayer, GetCurrentSelectedHole());
+	gameLogic.MakeMove(GetCurrentSelectedHole());
 }
 
 Console.Clear();

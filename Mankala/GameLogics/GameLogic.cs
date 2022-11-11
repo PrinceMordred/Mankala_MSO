@@ -27,15 +27,17 @@ public abstract class GameLogic : IObservable<string>
 
 	/// <summary> Performs the move and all logics related </summary>
 	/// <returns> The player who is up next, and the index of the last hole manipulated </returns>
-	public void MakeMove(Player p, int holeIndex) // Template method
+	public void MakeMove(int holeIndex) // Template method
 	{
 		NotifyObserversSuccess($"{CurrentPlayer.PlayerName} chose to spread the stones in hole {holeIndex}");
 		
 		if (!CheckValidMove(CurrentPlayer, holeIndex)) return;
 		var lastHoleAffected = PerformMove(CurrentPlayer, holeIndex);
-		CurrentPlayer = NextPlayer(p, lastHoleAffected);
 		
-		if (p != CurrentPlayer) NotifyObserversSuccess(
+		var previousPlayerNumber   = CurrentPlayer.PlayerNumber;
+		CurrentPlayer = NextPlayer(CurrentPlayer, lastHoleAffected);
+		
+		if (previousPlayerNumber != CurrentPlayer.PlayerNumber) NotifyObserversSuccess(
 			$"Next player is {CurrentPlayer.PlayerName} (with playerNumber {CurrentPlayer.PlayerNumber})");
 	}
 
