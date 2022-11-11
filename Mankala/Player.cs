@@ -17,7 +17,7 @@
         {
             Console.ForegroundColor = ConsoleColor;
             Console.Write(PlayerName);
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ResetColor();
         }
 
         public int PlayerNumber { get; init; }
@@ -27,10 +27,10 @@
 
         public void Deconstruct(out int playerNumber, out string playerName, out ConsoleColor consoleColor, out int? lastSelectedHole)
         {
-            playerNumber = this.PlayerNumber;
-            playerName = this.PlayerName;
-            consoleColor = this.ConsoleColor;
-            lastSelectedHole = this.LastSelectedHole;
+            playerNumber     = PlayerNumber;
+            playerName       = PlayerName;
+            consoleColor     = ConsoleColor;
+            lastSelectedHole = LastSelectedHole;
         }
     }
 }
