@@ -10,7 +10,6 @@ public class MankalaGameLogic : GameLogic
     protected override Player NextPlayer(Player player, int lastHoleIndex)
 	{
         //check what hole the stones were placed in
-        int stonesAfterTurn = _board.GetHole(lastHoleIndex);
         if (_board.IsMainHoleOf(player.PlayerNumber, lastHoleIndex))
             return player; //if it was the main hole, the player gets another turn
         return OtherPlayer(player);

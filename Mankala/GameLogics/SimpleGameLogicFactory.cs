@@ -2,7 +2,7 @@
 
 public enum GameLogicTypes
 {
-	Mankala, Wari
+	Mankala, Wari, FrozenYoghurtGameLogic
 }
 
 public static class SimpleGameLogicFactory
@@ -11,6 +11,7 @@ public static class SimpleGameLogicFactory
 	{
 		GameLogicTypes.Mankala => new MankalaGameLogic(board, players),
 		GameLogicTypes.Wari    => new WariGameLogic(board, players),
+		GameLogicTypes.FrozenYoghurtGameLogic => new FrozenYoghurtGameLogic(board, players),
 		_                      => throw new Exception("Cannot create non-existing GameLogic")
 	};
 }
