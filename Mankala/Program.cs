@@ -71,7 +71,7 @@ These are your options:
 	- Wari
 	- FrozenYoghurt
 
-", //TODO: werk deze lijst bij
+",
 	x => (Enum.TryParse(x, out GameLogicTypes gameLogic),
 		SimpleGameLogicFactory.CreateGameLogic(gameLogic, board, players)));
 gameLogic.Subscribe(logger);
