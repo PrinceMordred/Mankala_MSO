@@ -46,9 +46,31 @@ public class MankalaGameLogic : GameLogic
 
                 currentHole.StoneCount += 1;
                 stonesToSpread -= 1;
-                if (stonesToSpread == 0 && !_board.IsMainHoleOf(player.PlayerNumber, currentHole.HoleIndex) && currentHole.StoneCount != 1)
-                    PerformMove(player, currentHole.HoleIndex);
-                
+                if (stonesToSpread == 0)
+                {
+                    //check if the last move was in the home hole
+                    if (_board.IsMainHoleOf(player.PlayerNumber, currentHole.HoleIndex)) { }
+                    //not in the main hole
+                    //check if the hole was not empty
+                    else if (currentHole.StoneCount > 1)
+                    { 
+                        stonesToSpread = currentHole.StoneCount;
+                        currentHole.StoneCount = 0;
+                    }
+                    // stone landed in an empty hole on the players side
+                    else if (_board.GetRangeOfHoles(player.PlayerNumber).Start.Value <= currentHole.HoleIndex &&
+                             _board.GetRangeOfHoles(player.PlayerNumber).End.Value   >= currentHole.HoleIndex)
+                    {
+                        var opp = _board.GetOppositeHole(currentHole.HoleIndex).StoneCount;
+                        if (opp == 0) { }
+                        else 
+                        {
+                            _board.GetMainholeRef(player.PlayerNumber).StoneCount += opp;
+                            _board.GetOppositeHole(currentHole.HoleIndex).StoneCount = 0;
+                        }
+                    }
+                }
+                    
             }
             return currentHole.HoleIndex;
         }
