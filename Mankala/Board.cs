@@ -46,7 +46,11 @@ public class Board : IObservable<string>
 		Array.Fill(_holes, _numStartStones, _numNormalHolesPerPlayer + 1, _numNormalHolesPerPlayer);
 	}
 
-	/// <returns>A tuple containing: board ASCII art, width of the art, width of a single hole, offset of the first player hole</returns>
+	/// <returns>A tuple containing:
+	/// (board ASCII art,
+	/// width of the art,
+	/// width of a single hole,
+	/// offset of the first player hole)</returns>
 	public (string, int, int, int) PrintBoard()
 	{
 		// Calculate widths to base printing on

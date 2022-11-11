@@ -22,19 +22,14 @@ public class MoveTests
 		var board = defaultBoard;
 		var gameLogic = SimpleGameLogicFactory.CreateGameLogic(gameLogicType, board, players);
 
-		var holeIndexOfInvalidMoveP1 = board.GetMainHoleIndex(1);
-		var holeIndexOfInvalidMoveP2 = board.GetMainHoleIndex(2);
-
-		var previousHolesStateP1 = board.GetHoles(1);
-		var previousHolesStateP2 = board.GetHoles(2);
+		var holeIndexOfInvalidMove = board.GetMainHoleIndex(1);
+		var previousHolesState   = board.GetHoles(1);
 
 		// Act
-		gameLogic.MakeMove(players[0], holeIndexOfInvalidMoveP1);
-		gameLogic.MakeMove(players[1], holeIndexOfInvalidMoveP2);
+		gameLogic.MakeMove(holeIndexOfInvalidMove);
 		
 		// Assert
-		Assert.Equal(previousHolesStateP1, board.GetHoles(1));
-		Assert.Equal(previousHolesStateP2, board.GetHoles(2));
+		Assert.Equal(previousHolesState, board.GetHoles(1));
 	}
 
 	[Theory]
@@ -52,57 +47,49 @@ public class MoveTests
 		var previousHolesState = board.GetHoles(numberOfPlayerMakingMove);
 
 		// Act
-		gameLogic.MakeMove(players[0], holeIndexOfValidMove);
+		gameLogic.MakeMove(holeIndexOfValidMove);
 		
 		// Assert
 		Assert.NotEqual(previousHolesState, board.GetHoles(numberOfPlayerMakingMove));
 	}
 
-	[Fact]
-	public void MakeMove_WhenMoveShouldEndGame_EndsTheGame()
+	[Theory]
+	[InlineData(GameLogicTypes.Mankala)]
+	[InlineData(GameLogicTypes.Wari)]
+	public void MakeMove_WhenMoveIsValidAndGoesOverAMainHole_OnlyIncrementsPlayersMainHole(GameLogicTypes gameLogicType)
 	{
-		
-	}
-	[Fact]
-	public void MakeMove_WhenMove_TotalNumStonesConstant()
-	{
-		//var players = defaultPlayers;
-		//var board = defaultBoard;
-		//var gameLogic = SimpleGameLogicFactory.CreateGameLogic(gameLogicType, board, players);
-	}
-    [Fact]
-    public void MakeMove_WhenMove_BaseHolesDontDecrease()
-	{
+		// Arrange
+		Board     b         = defaultBoard;
+		Player[]  ps        = defaultPlayers;
+		GameLogic gameLogic = SimpleGameLogicFactory.CreateGameLogic(gameLogicType, b, ps);
 
-	}
-	[Fact]
-	public void MakeMove_WhenMoveIsValid_SpreadsStones()
-	{
-		
-	}
+		var targetHoleIndex = b.GetMainHoleIndex(ps[0].PlayerNumber) - 1;
 
-	[Fact]
-	public void MakeMove_WhenMoveIsValidAndGoesOverABaseHole_OnlyIncrementsPlayersBaseHole()
-	{
-		
+		// Act
+		gameLogic.MakeMove(targetHoleIndex);
+
+		// Assert
+		Assert.NotEqual(0, b.GetMainHole(1));
+		Assert.Equal(0, b.GetMainHole(2));
 	}
 
 	[Theory]
-	[InlineData(GameLogics.GameLogicTypes.Mankala)]
-	public void MakeMove_UsingInlineGameLogic_MakesCorrectPlayerGoNext(GameLogicTypes gameLogicType)
+	[InlineData(GameLogicTypes.Mankala, 1, true)]
+	[InlineData(GameLogicTypes.Mankala, 2, false)]
+	// [InlineData(GameLogicTypes.Wari,    1, false)] TODO
+	// [InlineData(GameLogicTypes.Wari,    1, true)] TODO
+	public void MakeMove_UsingInlineGameLogic_MakesCorrectPlayerGoNext(GameLogicTypes gameLogicType, int holeIndex, bool otherPlayerShouldBeNext)
 	{
 		// Arrange
-		var board = new Board(6, 4);
-		Player[] players =
-		{
-			new(1, "playerOne", ConsoleColor.Gray, -1),
-			new(2, "playerTwo", ConsoleColor.Gray, -1)
-		};
-		var ruleset = SimpleGameLogicFactory.CreateGameLogic(gameLogicType, board, players);
+		Board     b         = defaultBoard;
+		Player[]  ps        = defaultPlayers;
+		GameLogic gameLogic = SimpleGameLogicFactory.CreateGameLogic(gameLogicType, b, ps);
 
 		// Act
-
+		gameLogic.MakeMove(holeIndex);
+		
 		// Assert
+		Assert.Equal(otherPlayerShouldBeNext, gameLogic.CurrentPlayer.PlayerNumber != 1);
 	}
     
 }
