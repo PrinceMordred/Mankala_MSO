@@ -21,10 +21,39 @@ public class MankalaGameLogic : GameLogic
 
     protected override Player NextPlayer(Player player, int lastHoleIndex)
 	{
+        //check what hole the stones were placed in
+        int stonesAfterTurn = _board.GetHole(lastHoleIndex);
+        if (_board.IsMainHoleOf(player.PlayerNumber, lastHoleIndex))
+            return player; //if it was the main hole, the player gets another turn
         return OtherPlayer(player);
     }
+    public override int PerformMove(Player player, int holeIndex)
+    {
+        {
+            // make the move && change current player
+            var holesCycle = _board.GetHolesCycle(holeIndex);
 
-	public override float DetermineScore(Player p)
+            holesCycle.MoveNext();
+            var currentHole = holesCycle.Current;
+            var stonesToSpread = currentHole.StoneCount;
+            currentHole.StoneCount = 0;
+
+            while (holesCycle.MoveNext() && stonesToSpread > 0)
+            {
+                currentHole = holesCycle.Current;
+                if (_board.IsMainHoleOf(OtherPlayer(player).PlayerNumber, currentHole.HoleIndex))
+                    continue; // Don't affect other player's main hole
+
+                currentHole.StoneCount += 1;
+                stonesToSpread -= 1;
+                if (stonesToSpread == 0 && !_board.IsMainHoleOf(player.PlayerNumber, currentHole.HoleIndex) && currentHole.StoneCount != 1)
+                    PerformMove(player, currentHole.HoleIndex);
+                
+            }
+            return currentHole.HoleIndex;
+        }
+    }
+    public override float DetermineScore(Player p)
 	{
         return _board.GetMainHole(p.PlayerNumber);
     }
