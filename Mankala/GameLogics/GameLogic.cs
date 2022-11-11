@@ -15,7 +15,18 @@ public abstract class GameLogic : IObservable<string>
 	{
 		return _board.GetHole(selectedHole) > 0;
 	}
-	public abstract    Player? GetWinner(); //todo: what if it's a tie? (Not properly implemented everywhere)
+	public virtual    Player? GetWinner()
+    {
+		//check if one of the players has no stones left
+		bool Pred1 = _board.GetHoles(1).All(x => x == 0) && CurrentPlayer.PlayerNumber == 1;
+		bool Pred2 = _board.GetHoles(2).All(x => x == 0) && CurrentPlayer.PlayerNumber == 2;
+		if (Pred1 || Pred2)
+		{
+			//if so, the player with the most stones in the main holes wins
+			return _board.GetMainHole(1) > _board.GetMainHole(2) ? GetP1 : GetP2;
+		}
+		return null;
+	}
 	protected abstract Player  NextPlayer(Player player, int lastHoleIndex);
 	
 	public GameLogic(Board board, Player[] pList)
@@ -44,9 +55,12 @@ public abstract class GameLogic : IObservable<string>
 	/// <returns> The index of the hole in which the last stone was spread </returns>
 	public abstract int PerformMove(Player player, int holeIndex);
 
-	public abstract float DetermineScore(Player p);
-	
-	
+	public virtual float DetermineScore(Player p)
+    {
+		return _board.GetMainHole(p.PlayerNumber);
+	}
+
+
 	
 	// Observer pattern
 	private List<IObserver<string>> _observers = new();

@@ -13,7 +13,7 @@ public class Board : IObservable<string>
     public int GetMainHoleIndex(int playerNumber) => playerNumber is 1
 		? _numNormalHolesPerPlayer : _holes.Length - 1;
     public HoleReference GetOppositeHole(int holeIndex) => new HoleReference(_holes.Length -2 - holeIndex , this);
-    public HoleReference GetMainholeRef(int playerNumber) => new(GetMainHoleIndex(playerNumber), this);
+    public HoleReference GetMainHoleRef(int playerNumber) => new(GetMainHoleIndex(playerNumber), this);
     public Range GetRangeOfHoles(int playerNumber) => playerNumber switch
     {
         1 => new Range(0, GetMainHoleIndex(1)),
