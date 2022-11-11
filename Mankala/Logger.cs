@@ -2,7 +2,7 @@
 
 public interface ILogger : IObserver<string>
 {
-	
+	GameLogics.GameLogic GameLogic { get; set; }
 }
 
 public class Logger : ILogger, IDisposable

@@ -32,5 +32,21 @@
             consoleColor     = ConsoleColor;
             lastSelectedHole = LastSelectedHole;
         }
-    }
+
+		public GameLogics.GameLogic GameLogic
+		{
+			get => default;
+			set
+			{
+			}
+		}
+
+		public Board Board
+		{
+			get => default;
+			set
+			{
+			}
+		}
+	}
 }

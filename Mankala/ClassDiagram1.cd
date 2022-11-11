@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Mankala.GameLogics.FrozenYoghurtGameLogic">
-    <Position X="8.25" Y="7" Width="2" />
+    <Position X="8.25" Y="8.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAIAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>GameLogics\FrozenYoghurtGameLogic.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mankala.GameLogics.GameLogic">
-    <Position X="10.5" Y="2" Width="2" />
+    <Position X="10.5" Y="3.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAABICBIBAIAAEAAAAIAAAEACAgAAAAQAgAQQAAA=</HashCode>
       <FileName>GameLogics\GameLogic.cs</FileName>
@@ -16,21 +16,21 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Mankala.GameLogics.MankalaGameLogic">
-    <Position X="12.75" Y="7" Width="2" />
+    <Position X="12.75" Y="8.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAIAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>GameLogics\MankalaGameLogic.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mankala.GameLogics.WariGameLogic">
-    <Position X="10.5" Y="7" Width="2" />
+    <Position X="10.5" Y="8.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAIAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>GameLogics\WariGameLogic.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Mankala.Board">
-    <Position X="5.5" Y="2" Width="2.5" />
+    <Position X="5.75" Y="3.25" Width="2.25" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
@@ -48,7 +48,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Mankala.Logger">
-    <Position X="8.75" Y="3.25" Width="1.5" />
+    <Position X="8.25" Y="4.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AEAAAAAAACCAAAIAAAAAACAAABAAAEAAAAAAAABAAAA=</HashCode>
       <FileName>Logger.cs</FileName>
@@ -56,18 +56,87 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Mankala.Player">
-    <Position X="12.75" Y="2" Width="1.5" />
+    <Position X="12.75" Y="3.25" Width="1.5" />
+    <AssociationLine Name="Board" Type="Mankala.Board" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="13.125" Y="5.767" />
+        <Point X="13.125" Y="7.688" />
+        <Point X="8" Y="7.688" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAGAAAAAAAAAAAAQABAAgAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <HashCode>AAGAAAAAAAAAAAAQABAAiAAAAAAAAAAAAAAAACEAAAA=</HashCode>
       <FileName>Player.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="GameLogic" />
+      <Property Name="Board" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mankala.GameLogics.SimpleGameLogicFactory">
+    <Position X="3.5" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameLogics\SimpleGameLogicFactory.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="GameLogicTypes" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Mankala.ProgramUI">
+    <Position X="8" Y="1" Width="2.5" />
+    <AssociationLine Name="Board" Type="Mankala.Board" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8" Y="2.688" />
+        <Point X="7.812" Y="2.688" />
+        <Point X="7.812" Y="3.25" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="GameLogic" Type="Mankala.GameLogics.GameLogic" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.5" Y="2.688" />
+        <Point X="10.5" Y="2.75" />
+        <Point X="12.25" Y="2.75" />
+        <Point X="12.25" Y="3.25" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Logger" Type="Mankala.Logger" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10" Y="2.873" />
+        <Point X="10" Y="4.308" />
+        <Point X="10" Y="4.308" />
+        <Point X="10" Y="4.5" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAIAAAAEABIAAAAAIAAAjAAAAAAAAAAAAAIAASAAAAA=</HashCode>
+      <FileName>ProgramUI.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Board" />
+      <Property Name="GameLogic" />
+      <Property Name="Player" />
+      <Property Name="SimpleGameLogicFactory" />
+      <Property Name="ILogger" />
+      <Property Name="Logger" />
+    </ShowAsAssociation>
   </Class>
   <Interface Name="Mankala.ILogger" Collapsed="true">
-    <Position X="8.75" Y="2" Width="1.5" />
+    <Position X="8.25" Y="3.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Logger.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="GameLogic" />
+    </ShowAsAssociation>
   </Interface>
+  <Enum Name="Mankala.GameLogics.GameLogicTypes">
+    <Position X="3.5" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAACBAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameLogics\SimpleGameLogicFactory.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
