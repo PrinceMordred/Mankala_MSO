@@ -63,7 +63,18 @@ public class MoveTests
 	{
 		
 	}
+	[Fact]
+	public void MakeMove_WhenMove_TotalNumStonesConstant()
+	{
+		//var players = defaultPlayers;
+		//var board = defaultBoard;
+		//var gameLogic = SimpleGameLogicFactory.CreateGameLogic(gameLogicType, board, players);
+	}
+    [Fact]
+    public void MakeMove_WhenMove_BaseHolesDontDecrease()
+	{
 
+	}
 	[Fact]
 	public void MakeMove_WhenMoveIsValid_SpreadsStones()
 	{
@@ -93,4 +104,5 @@ public class MoveTests
 
 		// Assert
 	}
+    
 }
