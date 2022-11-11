@@ -66,7 +66,7 @@ public class MankalaGameLogic : GameLogic
                         else 
                         {
                             _board.GetMainholeRef(player.PlayerNumber).StoneCount += opp;
-                            opp = 0;
+                            _board.GetOppositeHole(currentHole.HoleIndex).StoneCount = 0;
                         }
                     }
                 }
