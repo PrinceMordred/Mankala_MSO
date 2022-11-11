@@ -37,6 +37,8 @@ Board promptBoard()
 }
 #endregion
 
+#region Set up players
+
 Player promptPlayer(int playerNumber)
 {
 	var name = prompt($"What will the name be of player {playerNumber}?",
@@ -56,6 +58,8 @@ players[1].LastSelectedHole = board.GetMainHoleIndex(players[1].PlayerNumber) - 
 
 Console.Clear();
 
+#endregion
+
 #region Set up game logics
 
 var gameLogic = prompt(@"What ruleset would you like the game to follow?
@@ -72,6 +76,8 @@ gameLogic.Subscribe(logger);
 
 int GetCurrentSelectedHole() => gameLogic.CurrentPlayer.LastSelectedHole; 
 bool lowerPlayerIsMakingAMove() => gameLogic.CurrentPlayer.PlayerNumber == 1;
+
+// Setups are done, now lets get into the thick of it
 
 Player? winner;
 while ((winner = gameLogic.GetWinner()) == null) // game loop
@@ -109,7 +115,7 @@ void promptSelectHole(int currentHoleIndex, Range holeIndexes)
 			// Reset cursor position after input
 			var (x, y) = Console.GetCursorPosition();
 			Console.SetCursorPosition(x -1, y);
-		} catch (Exception e) { }
+		} catch (Exception) { }
 		
 		switch (inputKey)
 		{
@@ -147,10 +153,14 @@ void promptSelectHole(int currentHoleIndex, Range holeIndexes)
 	}
 }
 
+// Returns (holesOffset, holeWidth, arrowY)
 (int, int, int) printBoardAndSelectionArrow(bool selectUpperHole)
 {
 	var (boardAscii, boardWidth, holeWidth, holesOffset) = board.PrintBoard();
 	StringBuilder stringBuilder = new();
+	
+	// Display how the board is layed out
+	stringBuilder.AppendLine($"{players[0].PlayerName} one has the lower holes, and {players[1].PlayerName} has the upper holes.");
 	
 	// create potential arrow above the board
 	stringBuilder.Append(selectUpperHole ? "|\nV\n" : "\n\n");
@@ -167,7 +177,7 @@ void promptSelectHole(int currentHoleIndex, Range holeIndexes)
 	// print to console
 	Console.Write(stringBuilder);
 
-	var arrowY = selectUpperHole ? 0 : 2 + 5; // padding + board height
+	var arrowY = selectUpperHole ? 1 : 2 + 5 + 1; // padding + board height
 	return (holesOffset, holeWidth, arrowY);
 }
 #endregion
