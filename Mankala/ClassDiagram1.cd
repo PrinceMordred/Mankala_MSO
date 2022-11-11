@@ -1,2 +1,73 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram /> 
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Mankala.GameLogics.FrozenYoghurtGameLogic">
+    <Position X="8.25" Y="7" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameLogics\FrozenYoghurtGameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mankala.GameLogics.GameLogic">
+    <Position X="10.5" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABICBIBAIAAEAAAAIAAAEACAgAAAAQAgAQQAAA=</HashCode>
+      <FileName>GameLogics\GameLogic.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Mankala.GameLogics.MankalaGameLogic">
+    <Position X="12.75" Y="7" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameLogics\MankalaGameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mankala.GameLogics.WariGameLogic">
+    <Position X="10.5" Y="7" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameLogics\WariGameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mankala.Board">
+    <Position X="5.5" Y="2" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="Mankala.Board.HoleReference">
+        <TypeIdentifier>
+          <NewMemberFileName>Board.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AACAAEAACBQIQgAAAAAAACQAAAACAgAAIAgEBAQEAAA=</HashCode>
+      <FileName>Board.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Mankala.Logger">
+    <Position X="8.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAACCAAAIAAAAAACAAABAAAEAAAAAAAABAAAA=</HashCode>
+      <FileName>Logger.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Mankala.Player">
+    <Position X="12.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAGAAAAAAAAAAAAQABAAgAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Mankala.ILogger" Collapsed="true">
+    <Position X="8.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Logger.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
