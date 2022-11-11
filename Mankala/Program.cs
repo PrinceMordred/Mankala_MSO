@@ -2,7 +2,9 @@
 using Mankala;
 using Mankala.GameLogics;
 
-Console.WriteLine("Warning: the interactive console UI (which you will see soon) only works on Windows");
+Console.WriteLine("> Warning: the interactive console UI (which you will see soon)\nonly works on Windows.");
+Console.WriteLine("> Note: if the board looks weird after making a move, try\nrestarting the game after upsizing your console window.");
+Console.WriteLine("> Note: The log will be written to your desktop as \"MankalaLog.txt\"");
 
 
 // A generic method which removes a lot of duplicate code for prompting the player for input

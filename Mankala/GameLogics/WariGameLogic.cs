@@ -16,6 +16,11 @@ public class WariGameLogic : GameLogic
 		return OtherPlayer(player); //TODO
     }
 
+	public override int PerformMove(Player player, int holeIndex)
+	{
+		throw new NotImplementedException();
+	}
+
 	public override float DetermineScore(Player p)
 	{
 		throw new NotImplementedException();
