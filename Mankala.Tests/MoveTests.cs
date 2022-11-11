@@ -17,6 +17,7 @@ public class MoveTests
 	[Theory]
 	[InlineData(GameLogicTypes.Mankala)]
 	[InlineData(GameLogicTypes.Wari)]
+	[InlineData(GameLogicTypes.FrozenYoghurt)]
 	public void MakeMove_WhenGivenAnInvalidMove_ShouldNotAlterTheBoardState(GameLogicTypes gameLogicType)
 	{
 		// Arrange
@@ -37,6 +38,7 @@ public class MoveTests
 	[Theory]
 	[InlineData(GameLogicTypes.Mankala)]
 	[InlineData(GameLogicTypes.Wari)]
+	[InlineData(GameLogicTypes.FrozenYoghurt)]
 	public void MakeMove_WhenGivenAValidMove_AltersState(GameLogicTypes gameLogicType)
 	{
 		// Arrange
@@ -58,6 +60,7 @@ public class MoveTests
 	[Theory]
 	[InlineData(GameLogicTypes.Mankala)]
 	[InlineData(GameLogicTypes.Wari)]
+	[InlineData(GameLogicTypes.FrozenYoghurt)]
 	public void MakeMove_WhenMoveIsValidAndGoesOverAMainHole_OnlyIncrementsPlayersMainHole(GameLogicTypes gameLogicType)
 	{
 		// Arrange
@@ -71,16 +74,18 @@ public class MoveTests
 		gameLogic.MakeMove(targetHoleIndex);
 
 		// Assert
-		if (gameLogicType is not GameLogicTypes.Wari)
+		if (gameLogicType is not (GameLogicTypes.Wari or GameLogicTypes.FrozenYoghurt))
 			Assert.NotEqual(0, b.GetMainHole(1));
 		Assert.Equal(0, b.GetMainHole(2));
 	}
 
 	[Theory]
-	[InlineData(GameLogicTypes.Mankala, 3, true)]
-	[InlineData(GameLogicTypes.Mankala, 2, false)]
-	[InlineData(GameLogicTypes.Wari,    2, true)]  // Wari always goes to the next player
-	[InlineData(GameLogicTypes.Wari,    6, false)] // Invalid move should not modify anything, however
+	[InlineData(GameLogicTypes.Mankala,       3, true)]
+	[InlineData(GameLogicTypes.Mankala,       2, false)]
+	[InlineData(GameLogicTypes.Wari,          2, true)]  // Wari always goes to the next player
+	[InlineData(GameLogicTypes.Wari,          6, false)] // Invalid move should not modify anything, however
+	[InlineData(GameLogicTypes.FrozenYoghurt, 3, true)]  // FrozenYoghurt always goes to the next player
+	[InlineData(GameLogicTypes.FrozenYoghurt, 6, false)] // Invalid move should not modify anything, however
 	public void MakeMove_UsingInlineGameLogic_MakesCorrectPlayerGoNext(GameLogicTypes gameLogicType, int holeIndex, bool otherPlayerShouldBeNext)
 	{
 		// Arrange
@@ -98,6 +103,7 @@ public class MoveTests
 	[Theory]
 	[InlineData(GameLogicTypes.Mankala)]
 	[InlineData(GameLogicTypes.Wari)]
+	[InlineData(GameLogicTypes.FrozenYoghurt)]
 	public void MakeMove_AfterMove_TotalNumberOfStonesDidNotChange(GameLogicTypes gameLogicType)
 	{
 		// Arrange
@@ -139,6 +145,7 @@ public class MoveTests
 	[Theory]
 	[InlineData(GameLogicTypes.Mankala, 5)]
 	[InlineData(GameLogicTypes.Wari, 5)]
+	//[InlineData(GameLogicTypes.FrozenYoghurt, 5)] FrozenYoghurt does not follow this requirenment
 	public void MakeMove_AfterEveryMove_MainHoleStoneCountsDontDecrease(GameLogicTypes gameLogicType, int iterations)
 	{
 		// Arrange
