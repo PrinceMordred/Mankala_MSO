@@ -10,25 +10,18 @@ public abstract class GameLogic : IObservable<string>
 	public Player GetP2 => _playerList[1];
     public Player OtherPlayer(Player p) => p.PlayerNumber == 1 ? GetP2 : GetP1;
 
-    protected int _numNormalHolesPerPlayer;
-	protected int _numMainHolesPerPlayer;
-	protected int _numStartStones;
-	
-	// factory methods
+    // factory methods
 	protected virtual bool CheckValidMove(Player player, int selectedHole)
 	{
-		if (_board.GetHole(selectedHole) > 0)
-			return true;
-		return false;
-		
+		return _board.GetHole(selectedHole) > 0;
 	}
 	public abstract    Player? GetWinner(); //todo: what if it's a tie? (Not properly implemented everywhere)
 	protected abstract Player  NextPlayer(Player player, int lastHoleIndex);
 	
 	public GameLogic(Board board, Player[] pList)
 	{
-		_board      = board;
-		_playerList = pList;
+		_board        = board;
+		_playerList   = pList;
 		CurrentPlayer = GetP1;
 	}
 

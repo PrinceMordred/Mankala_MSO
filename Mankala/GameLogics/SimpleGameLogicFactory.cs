@@ -1,16 +1,16 @@
 ﻿namespace Mankala.GameLogics;
 
-public enum GameLogics
+public enum GameLogicTypes
 {
 	Mankala, Wari
 }
 
 public static class SimpleGameLogicFactory
 {
-	public static GameLogic CreateGameLogic(GameLogics gameLogic, Board board, Player[] players) => gameLogic switch
+	public static GameLogic CreateGameLogic(GameLogicTypes gameLogicType, Board board, Player[] players) => gameLogicType switch
 	{
-		GameLogics.Mankala => new MankalaGameLogic(board, players),
-		GameLogics.Wari    => new WariGameLogic(board, players),
-		_                  => throw new Exception("Cannot create non-existing GameLogic")
+		GameLogicTypes.Mankala => new MankalaGameLogic(board, players),
+		GameLogicTypes.Wari    => new WariGameLogic(board, players),
+		_                      => throw new Exception("Cannot create non-existing GameLogic")
 	};
 }

@@ -2,6 +2,9 @@
 using Mankala;
 using Mankala.GameLogics;
 
+Console.WriteLine("Warning: the interactive console UI (which you will see soon) only works on Windows");
+
+
 // A generic method which removes a lot of duplicate code for prompting the player for input
 T prompt<T>(string question, Func<string?, (bool, T)> tryParse,
 	string errorMessage = "[ERROR] That's some invalid input. Please try again.")
@@ -27,12 +30,10 @@ Board promptBoard()
 {
 	var stonesPerHole  = prompt("How many stones should every hole have?",
 		x => (byte.TryParse(x, out var parsed) && parsed > 0 , parsed));
-	var normalHolesPerPlayer = prompt("How many normal holes should evey player have?",
+	var normalHolesPerPlayer = prompt("How many holes should evey player have?",
 		x => (byte.TryParse(x, out var parsed) && parsed > 1, parsed));
-	var mainHolesPerPlayer = prompt("How many main (home) holes should evey player have?",
-		x => (byte.TryParse(x, out var parsed) && parsed > 0, parsed));
 	
-	return new Board(stonesPerHole, normalHolesPerPlayer, mainHolesPerPlayer);
+	return new Board(stonesPerHole, normalHolesPerPlayer);
 }
 #endregion
 
@@ -64,7 +65,7 @@ These are your options:
 	- Wari
 
 ", //TODO: werk deze lijst bij
-	x => (Enum.TryParse(x, out GameLogics gameLogic),
+	x => (Enum.TryParse(x, out GameLogicTypes gameLogic),
 		SimpleGameLogicFactory.CreateGameLogic(gameLogic, board, players)));
 gameLogic.Subscribe(logger);
 #endregion
@@ -75,8 +76,6 @@ bool lowerPlayerIsMakingAMove() => gameLogic.CurrentPlayer.PlayerNumber == 1;
 Player? winner;
 while ((winner = gameLogic.GetWinner()) == null) // game loop
 {
-	throw new Exception("The this code possibly does not cope with multiple mainHoles");
-	
 	// Ask the player to make a move
 	Console.Clear();
 	promptSelectHole(GetCurrentSelectedHole(), board.GetRangeOfHoles(gameLogic.CurrentPlayer.PlayerNumber));

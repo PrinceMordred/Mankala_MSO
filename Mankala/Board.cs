@@ -6,7 +6,6 @@ public class Board : IObservable<string>
 {
 	protected readonly byte _numStartStones;
 	protected readonly byte _numNormalHolesPerPlayer;
-	protected readonly byte _numMainHolesPerPlayer; //TODO: this is not properly implemented
 	
 	protected byte[] _holes; // n holes for p1, 1 main hole for p1, n holes for p2, 1 main hole for p2
 	//public byte[] GetHolesCopy => _holes;
@@ -32,18 +31,17 @@ public class Board : IObservable<string>
 	};
     
 
-	public Board(byte numStartStones, byte numNormalHolesPerPlayer, byte numMainHolesPerPlayer)
+	public Board(byte numStartStones, byte numNormalHolesPerPlayer)
 	{
 		_numStartStones = numStartStones;
 		_numNormalHolesPerPlayer = numNormalHolesPerPlayer;
-		_numMainHolesPerPlayer = numMainHolesPerPlayer;
 		InitializeBoard();
 	}
 
 	private void InitializeBoard()
 	{
 		_holes = new byte[2 + _numNormalHolesPerPlayer * 2]; // 2 base-holes and every player hole
-		Array.Fill(_holes, _numStartStones, 0,                   _numNormalHolesPerPlayer);
+		Array.Fill(_holes, _numStartStones, 0,                       _numNormalHolesPerPlayer);
 		Array.Fill(_holes, _numStartStones, _numNormalHolesPerPlayer + 1, _numNormalHolesPerPlayer);
 	}
 
