@@ -71,15 +71,16 @@ public class MoveTests
 		gameLogic.MakeMove(targetHoleIndex);
 
 		// Assert
-		Assert.NotEqual(0, b.GetMainHole(1));
+		if (gameLogicType is not GameLogicTypes.Wari)
+			Assert.NotEqual(0, b.GetMainHole(1));
 		Assert.Equal(0, b.GetMainHole(2));
 	}
 
 	[Theory]
-	[InlineData(GameLogicTypes.Mankala, 1, true)]
+	[InlineData(GameLogicTypes.Mankala, 3, true)]
 	[InlineData(GameLogicTypes.Mankala, 2, false)]
-	// [InlineData(GameLogicTypes.Wari,    1, false)] TODO
-	// [InlineData(GameLogicTypes.Wari,    1, true)] TODO
+	[InlineData(GameLogicTypes.Wari,    2, true)]  // Wari always goes to the next player
+	[InlineData(GameLogicTypes.Wari,    6, false)] // Invalid move should not modify anything, however
 	public void MakeMove_UsingInlineGameLogic_MakesCorrectPlayerGoNext(GameLogicTypes gameLogicType, int holeIndex, bool otherPlayerShouldBeNext)
 	{
 		// Arrange
