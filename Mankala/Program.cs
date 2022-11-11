@@ -69,6 +69,7 @@ var gameLogic = prompt(@"What ruleset would you like the game to follow?
 These are your options:
 	- Mankala
 	- Wari
+	- FrozenYoghurt
 
 ", //TODO: werk deze lijst bij
 	x => (Enum.TryParse(x, out GameLogicTypes gameLogic),
